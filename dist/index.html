@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f6f2"><meta name="description" content="画下一个图形，让傅里叶级数用旋转圆重新描绘。自由调节圆圈数量，探索数学与线条的关系。">
+  <title>傅里叶画室 · 旋转圆与参数矩阵</title>
+  <link rel="stylesheet" href="./style.css"><script type="module" src="./app.js"></script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="./" aria-label="傅里叶画室首页"><span class="brandmark">◉</span><strong>傅里叶画室</strong><span class="brand-en">FOURIER STUDIO</span></a><span class="top-note"><i></i> 一条线，无数种可能</span></header>
+<main>
+  <section class="intro"><div><div class="eyebrow">A LITTLE MATH. A LOT OF WONDER.</div><h1>让圆圈，画出你的想象<span>。</span></h1><p>画一个图形，看看旋转的圆如何把它重新描绘。</p></div><div class="intro-symbol" aria-hidden="true">∑<span>圆的相加<br>线的诞生</span></div></section>
+  <div class="studio">
+    <aside class="controls">
+      <section class="control-section"><div class="section-heading"><span class="step">01</span><h2>选择你的线条</h2></div><div class="presets" role="group" aria-label="示例图形"><button data-preset="heart" class="preset active"><span>♡</span>爱心</button><button data-preset="star" class="preset"><span>☆</span>星星</button><button data-preset="butterfly" class="preset"><span>ʚɞ</span>蝴蝶</button><button data-preset="flower" class="preset"><span>❀</span>花朵</button></div><button id="draw" class="draw-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15z"/></svg>自己画一个<span>↗</span></button><button id="import-image" class="draw-button">▧ 导入图片<span>↗</span></button><input id="image-file" type="file" accept="image/png,image/jpeg,image/webp,image/bmp,image/gif,image/svg+xml" hidden><p class="small-note" id="draw-note">也可以直接选一个示例开始探索。</p></section>
+      <section class="control-section"><div class="section-heading"><span class="step">02</span><h2>用多少个圆？</h2></div><div class="count-row editable-count"><label class="count-label" for="count-number">旋转圆数量</label><div><input id="count-number" type="number" min="1" max="511" value="40" aria-label="精确设置圆圈数量"><span>个</span></div></div><input id="count" type="range" min="1" max="511" value="40" aria-label="圆圈数量"><div class="range-labels"><span>1 · 简单</span><span>511 · 精细</span></div><div class="count-presets" role="group" aria-label="常用圆圈数量"><button data-count="5">5</button><button data-count="20">20</button><button data-count="60">60</button><button data-count="120">120</button></div><p class="small-note">点击上面的数字直接输入（1–511），按 Enter 或移开焦点应用。</p></section>
+      <section class="control-section options"><div class="section-heading"><span class="step">03</span><h2>调一调，慢慢看</h2></div><div class="speed-row"><label for="speed">统一速度倍率</label><select id="speed"><option value="0.01">0.01×</option><option value="0.05">0.05×</option><option value="0.1" selected>0.1×</option><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></div><label class="toggle-row" for="circles"><span>显示旋转圆</span><input id="circles" type="checkbox" checked><span class="switch"></span></label><label class="toggle-row" for="reference"><span>显示原图轮廓</span><input id="reference" type="checkbox" checked><span class="switch"></span></label></section>
+      <div class="aside-footer">从一个圆，到一幅画。<span>数学也可以很好玩。</span></div>
+    </aside>
+    <section class="workspace" aria-label="傅里叶绘图工作区">
+      <div class="canvas-toolbar"><div class="live-status"><span class="status-dot"></span><span id="mode-label">正在描绘</span></div><div class="toolbar-right"><span id="shape-name">爱心</span><button id="export" class="icon-button" aria-label="保存画布为图片" title="保存图片"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v4h16v-4"/></svg></button></div></div>
+      <div class="canvas-wrap" id="canvas-wrap"><canvas id="canvas" aria-label="旋转圆叠加绘制图形。点击自己画一个，可用鼠标或手指绘制。"></canvas><div class="canvas-corner">z(t) = z₀ + ∑ rᵢ eⁱ⁽ωᵢᵗ⁺φᵢ⁾</div><div id="draw-hint" class="draw-hint" hidden><span>✎</span><strong>在这里一笔画出你的图形</strong><p>松开后点击「开始转换」 · 首尾会自动连接</p></div><div class="legend"><span><i class="legend-line original"></i>原图</span><span><i class="legend-line result"></i>傅里叶轨迹</span></div><div id="drawing-actions" class="drawing-actions" hidden><button id="redraw">重画</button><button id="convert" class="primary">开始转换 ↗</button><button id="cancel-draw">取消</button></div></div>
+      <div class="playback"><button id="play" class="play-button" aria-label="暂停动画">Ⅱ</button><button id="restart" class="icon-button" aria-label="从头播放" title="从头播放">↺</button><input id="timeline" type="range" min="0" max="1000" value="0" aria-label="描绘进度"><output id="progress">0%</output><span class="cycle-label">一个周期</span></div>
+      <div class="canvas-footer"><span><i></i><strong id="circle-stat">40</strong> 个圆正在协作</span><span id="accuracy">轮廓重建中</span></div>
+    </section>
+  </div>
+  <section class="parameters" aria-label="圆圈参数编辑器">
+    <div class="parameter-heading"><div><div class="eyebrow">CIRCLE PARAMETERS</div><h2>每个圆，都可以自己定义。</h2><p>三组 N × 1 列矩阵，第 i 行对应第 i 个圆，按首尾相接的顺序排列。</p></div><a class="parameter-jump" href="#count-number">数量：<strong id="matrix-count">40</strong> 个 ↗</a></div>
+    <div class="parameter-formula">z(t) = z₀ + ∑ rᵢ · eⁱ⁽ωᵢᵗ⁺φᵢ⁾ <span>t：模拟秒数，0–9 s · z₀ = <b id="center-value"></b></span></div>
+    <div class="matrix-copy-options"><label for="copy-shape">复制格式</label><select id="copy-shape"><option value="vector">行向量 [1, 2, 3]</option><option value="row">行矩阵 [[1, 2, 3]]</option><option value="column">列矩阵 [[1], [2], [3]]</option></select><span>选中几个数字就复制几个；Ctrl + C 或「复制选中」均可。</span></div>
+    <div class="matrix-grid">
+      <div class="matrix-field"><label for="omega-matrix"><strong>Ω · 角速度矩阵</strong><span>rad/s</span></label><p>恒定角速度；正数顺时针，负数逆时针。</p><div class="matrix-brackets"><textarea id="omega-matrix" spellcheck="false" aria-describedby="matrix-help" wrap="off"></textarea></div><div class="matrix-field-actions"><button data-copy-selection="omega-matrix" disabled aria-label="复制选中的角速度">复制选中</button><button data-copy-matrix="omega-matrix" aria-label="复制整组角速度">复制整组</button></div></div>
+      <div class="matrix-field"><label for="phase-matrix"><strong>Φ · 初始角度矩阵</strong><span>rad</span></label><p>相对向右方向；π/2 约为 1.570796。</p><div class="matrix-brackets"><textarea id="phase-matrix" spellcheck="false" aria-describedby="matrix-help" wrap="off"></textarea></div><div class="matrix-field-actions"><button data-copy-selection="phase-matrix" disabled aria-label="复制选中的初始角度">复制选中</button><button data-copy-matrix="phase-matrix" aria-label="复制整组初始角度">复制整组</button></div></div>
+      <div class="matrix-field"><label for="radius-matrix"><strong>R · 半径 / 长度矩阵</strong><span>归一化单位</span></label><p>圆半径也是连杆长度；允许设为 0。</p><div class="matrix-brackets"><textarea id="radius-matrix" spellcheck="false" aria-describedby="matrix-help" wrap="off"></textarea></div><div class="matrix-field-actions"><button data-copy-selection="radius-matrix" disabled aria-label="复制选中的半径">复制选中</button><button data-copy-matrix="radius-matrix" aria-label="复制整组半径">复制整组</button></div></div>
+    </div>
+    <p id="matrix-help" class="matrix-help">点击矩阵框后按 Ctrl + V 粘贴。支持 [1, 2, 3]、[[1, 2, 3]]、[[1], [2], [3]]、[1; 2; 3] 或每行一个数字。三组行数一致时，应用后自动更新圆圈数量。</p>
+    <div id="copy-fallback" hidden><label for="copy-output">复制内容已选中，请按 Ctrl + C</label><textarea id="copy-output" readonly spellcheck="false"></textarea></div>
+    <div class="matrix-actions"><button id="apply-matrices" class="primary">应用矩阵并播放 ↗</button><button id="restore-fourier">恢复原图傅里叶参数</button><button id="example-matrices">试试三圆示例</button><label class="number-label"><input type="checkbox" id="circle-numbers">画布标注序号</label></div>
+    <div class="matrix-status-row"><p id="matrix-status" role="status" aria-live="polite">正在显示原图的傅里叶参数。</p><span id="simulation-time">t = 0.00 s</span></div><p id="matrix-error" role="alert" hidden></p>
+    <div class="copy-all-row"><button id="copy-all-parameters">复制全部三列参数</button><span>生成 [[角速度, 初始角度, 半径], …]，可以直接粘贴到下方整表导入。</span></div>
+    <details id="paste-details"><summary>整表粘贴 · 从 Excel 一次导入三列 <span>↗</span></summary><p class="table-note">按 Ctrl + V 粘贴纯数字表格，不含表头。每行一个圆，三列依次为角速度（rad/s）、初始角度（rad）、半径。支持制表符、逗号或空格分列，换行或分号分行。</p><label class="paste-label" for="table-paste">三列参数表</label><textarea id="table-paste" spellcheck="false" placeholder="0.7&#9;0&#9;0.7&#10;-2.1&#9;1.570796&#9;0.25&#10;3.5&#9;0&#9;0.12"></textarea><div class="matrix-actions"><button id="import-table" class="primary">导入整表并播放 ↗</button><span class="paste-tip">也支持 JSON：[[0.7, 0, 0.7], [-2.1, 1.57, 0.25]]</span></div><p id="paste-error" role="alert" hidden></p></details>
+    <details id="parameter-details"><summary>查看所有圆的参数与实时状态 <span>↗</span></summary><p class="table-note">当前角度按 2π 取模。圆心与端点坐标随旋转更新；y 轴向下。角速度列为基准值；实际播放角速度 = 基准值 × 统一速度倍率。倍率也会同步换算到下方 Desmos 的 c 列表。</p><div class="parameter-table-wrap"><table class="parameter-table"><thead><tr><th>圆</th><th>角速度 ω (rad/s)</th><th>初始角度 φ (rad)</th><th>半径 r</th><th>当前角度 (rad)</th><th>圆心 (x, y)</th><th>端点 (x, y)</th></tr></thead><tbody id="parameter-rows"></tbody></table></div></details>
+  </section>
+  <section class="parameters desmos-export" id="desmos-export" aria-label="适配你的 Desmos 公式">
+    <div class="parameter-heading"><div><div class="eyebrow">DESMOS EXPORT</div><h2>给你的 Desmos 公式用。</h2><p>已适配 x 用 sin、y 用 cos，以及你公式里的 200π/180 系数。直接保留你的绘图公式，分别替换 a、b、c 三组列表。</p></div><span class="desmos-badge">a · b · c</span></div>
+    <div class="desmos-settings"><label for="desmos-domain">1× 时的基础 t 范围</label><select id="desmos-domain"><option value="1">0–1（归一化基准）</option><option value="9">0–9（模拟秒数基准）</option></select><label><input id="desmos-center" type="checkbox">包含中心偏移（加一个速度为 0 的项）</label></div>
+    <div class="uniform-speed-control"><label for="uniform-speed">所有圆的转速等比例缩放</label><div><input id="uniform-speed" type="number" min="0.001" max="4" step="any" value="0.1" aria-describedby="speed-scale-note"><span>×</span></div><span class="uniform-speed-hint">0.1 = 原来的十分之一；可输入 0.05、0.01 等倍率。</span></div>
+    <p id="speed-scale-note" class="matrix-help"></p>
+    <p id="desmos-summary" class="desmos-summary" role="status"></p>
+    <div class="matrix-grid">
+      <div class="desmos-list"><label for="desmos-a">a · 初始角度（已转换）</label><textarea id="desmos-a" readonly spellcheck="false"></textarea><button data-copy-desmos="a">单独复制 a</button></div>
+      <div class="desmos-list"><label for="desmos-b">b · 半径 / 长度</label><textarea id="desmos-b" readonly spellcheck="false"></textarea><button data-copy-desmos="b">单独复制 b</button></div>
+      <div class="desmos-list"><label for="desmos-c">c · 转速（已转换）</label><textarea id="desmos-c" readonly spellcheck="false"></textarea><button data-copy-desmos="c">单独复制 c</button></div>
+    </div>
+    <p class="matrix-help">这些是画布当前已应用参数的转换结果。三组列表保持相同顺序；不要与上方原始 Ω、Φ、R 混用。未包含中心偏移时，仅整体位置有所不同。若还使用这些列表绘制各个圆，相应公式也须使用相同角度约定。</p>
+  </section>
+  <section class="explanation"><div class="explain-index">背后的数学 <span>↘</span></div><p>每个圆以自己的速度旋转。把它们首尾相接，最后一个圆的端点就会画出一条线。<br><span>自定义角速度可能产生不闭合的轨迹；自定义模式会在 9 秒时暂停，可点击从头播放。</span></p><span class="formula" aria-hidden="true">复杂 → 简单 → 可能</span></section>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+<dialog id="image-dialog" aria-labelledby="image-dialog-title">
+  <div class="image-dialog-heading"><div><div class="eyebrow">IMAGE TO FOURIER</div><h2 id="image-dialog-title">把图片变成旋转圆。</h2></div><button id="close-image" aria-label="关闭图片导入">×</button></div>
+  <p class="image-intro">自动提取图片中的单条闭合轮廓。适合浅色背景上的深色图案、图标或剪影；复杂照片可调阈值后选择轮廓。</p>
+  <div class="image-preview-grid"><figure><figcaption>原图</figcaption><canvas id="image-original"></canvas></figure><figure><figcaption>选中的轮廓</figcaption><canvas id="image-outline"></canvas></figure></div>
+  <div class="image-controls"><label for="image-threshold">明暗阈值 <output id="threshold-value">160</output></label><input id="image-threshold" type="range" min="0" max="255" value="160"><button id="auto-threshold">自动阈值</button><label class="image-invert"><input id="image-invert" type="checkbox">浅色图案 / 深色背景</label></div>
+  <label class="image-contour-label" for="image-contour">选择要转换的轮廓</label><select id="image-contour"></select>
+  <p id="image-status" role="status" aria-live="polite"></p><p id="image-error" role="alert" hidden></p>
+  <div class="image-dialog-actions"><button id="cancel-image">取消</button><button id="convert-image" class="primary" disabled>转换为傅里叶圆 ↗</button></div>
+  <p class="image-local-note">图片只在本机浏览器处理。每次转换一条轮廓，不会自动连接不同图案。</p>
+</dialog>
+</body></html>
+
+
+

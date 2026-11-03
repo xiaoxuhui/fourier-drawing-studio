@@ -1,0 +1,1 @@
+{"name":"fourier-drawing-studio","private":true,"type":"module","scripts":{"test":"node --test test/fourier.test.js test/contours.test.js","start":"node serve.mjs"}}

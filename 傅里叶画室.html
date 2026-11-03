@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f6f2"><meta name="description" content="画下一个图形，让傅里叶级数用旋转圆重新描绘。自由调节圆圈数量，探索数学与线条的关系。">
+  <title>傅里叶画室 · 旋转圆与参数矩阵</title>
+  <style>:root{font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;color:#293a35;background:#f5f6f2;font-synthesis:none;--green:#21735b;--muted:#8c9690;--border:#e3e7df;--coral:#e97a61}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{cursor:default;opacity:.4}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #e7a16b;outline-offset:4px}button{transition:background .18s,border-color .18s,color .18s}button:hover{filter:brightness(.97)}[hidden]{display:none!important}.topbar{height:84px;max-width:1600px;margin:auto;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}.brand{display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none}.brandmark{font-size:30px;color:var(--green);line-height:1}.brand strong{font-size:18px;letter-spacing:2px}.brand-en{font-size:9px;letter-spacing:2.3px;color:#8c9690;border-left:1px solid #d4dbd2;padding-left:15px;margin-left:8px}.top-note{font-size:11px;color:#7f8c83;letter-spacing:1px}.top-note i{display:inline-block;background:#79a28d;width:5px;height:5px;border-radius:50%;margin-right:8px}main{max-width:1440px;margin:auto;padding:42px 4.5% 22px}.intro{display:flex;justify-content:space-between;align-items:center;margin-bottom:31px}.eyebrow{color:#86978c;font-size:9px;font-weight:600;letter-spacing:2px;margin-bottom:12px}h1{font-size:clamp(25px,3vw,38px);font-weight:600;letter-spacing:1px;margin:0 0 12px}h1>span{color:var(--coral)}.intro p{color:#88938d;font-size:13px;margin:0;letter-spacing:.4px}.intro-symbol{display:flex;align-items:center;gap:18px;font-family:Georgia,serif;font-size:58px;font-style:italic;color:#b8c5b8;transform:rotate(-4deg);margin-right:20px}.intro-symbol span{font-family:"Microsoft YaHei",sans-serif;font-size:10px;line-height:1.8;letter-spacing:3px;font-style:normal}.studio{display:grid;grid-template-columns:280px minmax(0,1fr);border:1px solid #dce2d7;border-radius:15px;overflow:hidden;background:#fff;box-shadow:0 12px 40px #3a563007}.controls{background:#fcfcf9;border-right:1px solid var(--border);padding:24px 23px 18px;display:flex;flex-direction:column}.control-section{padding-bottom:22px;margin-bottom:22px;border-bottom:1px solid var(--border)}.section-heading{display:flex;align-items:center;gap:10px;margin-bottom:17px}.step{font-family:monospace;font-size:10px;color:#91a18e;border:1px solid #dce4d7;border-radius:50%;width:24px;height:24px;display:grid;place-items:center}h2{font-size:13px;font-weight:600;letter-spacing:.7px;margin:0}.presets{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.preset{display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;border:1px solid var(--border);background:transparent;border-radius:8px;padding:10px 0 9px;font-size:10px;color:#7b8c80}.preset span{font-size:24px;line-height:1;height:26px}.preset.active{border-color:#87ac96;background:#eef4e9;color:var(--green)}.draw-button{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:1px dashed #bbc9b6;border-radius:7px;background:transparent;color:#526c56;font-size:12px;margin-top:11px;padding:10px 12px}.draw-button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}.draw-button>span{margin-left:auto;color:#8d9c89}.draw-button.active{background:#eaf2e3;border-style:solid}.small-note{font-size:10px;color:#94a08f;line-height:1.8;margin:10px 0 0}.count-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.count-label{font-size:11px;color:#8a9786}.count-row>div{display:flex;gap:7px;align-items:baseline}.count-row span{font-size:10px;color:#8b9786}#count-number{font-size:30px;letter-spacing:-1px;font-weight:500;color:var(--green);width:73px;text-align:right;padding:0;border:0;background:transparent;appearance:textfield;-moz-appearance:textfield}#count-number::-webkit-inner-spin-button{appearance:none}input[type=range]{width:100%;height:4px;appearance:none;-webkit-appearance:none;background:#e1e7dd;border-radius:4px;cursor:pointer;accent-color:var(--green);margin:12px 0}input[type=range]::-webkit-slider-thumb{appearance:none;width:13px;height:13px;border-radius:50%;background:var(--green);border:3px solid #fff;box-shadow:0 0 0 1px var(--green)}input[type=range]::-moz-range-thumb{width:9px;height:9px;border-radius:50%;background:var(--green);border:3px solid #fff;box-shadow:0 0 0 1px var(--green)}.range-labels{display:flex;justify-content:space-between;font-size:9px;color:#98a38f;margin:1px 0 14px}.count-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.count-presets button{font-family:monospace;border:1px solid var(--border);background:transparent;border-radius:5px;color:#85907d;padding:6px;font-size:11px}.count-presets button.active{border-color:#91b79a;color:var(--green);background:#eef4e9}.speed-row,.toggle-row{display:flex;align-items:center;justify-content:space-between;font-size:11px;margin:15px 0;color:#6e806d}select{background:#f1f4ec;border:1px solid #e3e7dc;border-radius:5px;padding:5px 8px;font-size:11px;color:#516b50}label.toggle-row{position:relative;cursor:pointer}.toggle-row input{position:absolute;right:0;opacity:0;width:29px;height:18px;margin:0}.switch{width:29px;height:17px;border-radius:12px;background:#cfd6c7;pointer-events:none;position:relative;transition:background .2s}.switch:after{content:"";position:absolute;top:3px;left:3px;width:11px;height:11px;background:#fff;border-radius:50%;transition:transform .2s}.toggle-row input:checked+.switch{background:#66987a}.toggle-row input:checked+.switch:after{transform:translateX(12px)}.toggle-row input:focus-visible+.switch{outline:3px solid #e7a16b;outline-offset:4px}.options{padding-bottom:10px;margin-bottom:0;border:0}.aside-footer{font-size:10px;color:#9ea995;line-height:1.9;margin-top:auto;padding-top:16px}.aside-footer span{display:block;color:#b0b8a8}.workspace{display:flex;flex-direction:column;min-width:0;background:#fcfdfb}.canvas-toolbar{height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 23px;border-bottom:1px solid #edf0e9}.live-status{display:flex;align-items:center;gap:8px;font-size:10px;color:#728268}.status-dot{width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 0 3px #edf3e9}.toolbar-right{display:flex;align-items:center;gap:17px;color:#9ba68f;font-size:10px}.icon-button{border:0;background:transparent;color:#7e9076;width:28px;height:28px;display:grid;place-items:center;font-size:24px;padding:5px}.icon-button svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round}.canvas-wrap{position:relative;flex:1;min-height:470px;overflow:hidden;background-color:#fcfdfb;background-image:radial-gradient(#d7e0d0 .65px,transparent .65px);background-size:20px 20px}canvas{width:100%;height:100%;position:absolute;inset:0;display:block;touch-action:pan-y}.canvas-wrap.drawing canvas{cursor:crosshair;touch-action:none}.canvas-corner{position:absolute;left:23px;top:20px;color:#a7b39c;font-family:Georgia,serif;font-size:15px;letter-spacing:1px;pointer-events:none}.legend{position:absolute;bottom:20px;left:23px;display:flex;gap:16px;font-size:9px;color:#9aa58e;pointer-events:none}.legend>span{display:flex;align-items:center;gap:5px}.legend-line{display:inline-block;width:16px;height:0;border-top:1px solid #afbba4}.legend-line.original{border-top-style:dashed}.legend-line.result{border-top:2px solid var(--coral)}.draw-hint{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;width:90%;color:#6d8568}.draw-hint>span{display:block;font-size:42px;margin-bottom:14px;opacity:.6}.draw-hint strong{font-size:17px;font-weight:500}.draw-hint p{font-size:11px;color:#9aa790;margin-top:12px}.drawing-actions{position:absolute;bottom:20px;right:20px;display:flex;gap:8px}.drawing-actions button{border:1px solid #d4dfcd;background:#fcfdf9;color:#6d8465;font-size:11px;padding:9px 13px;border-radius:6px}.drawing-actions .primary{background:var(--green);color:white;border-color:var(--green)}.playback{display:flex;align-items:center;gap:12px;padding:15px 23px;background:#fff;border-top:1px solid #e8ede3}.play-button{flex-shrink:0;width:31px;height:31px;border-radius:50%;background:var(--green);color:white;border:0;font-size:13px;letter-spacing:1px}#timeline{flex:1;min-width:0;height:3px;margin:0 5px 0 0}#timeline::-webkit-slider-thumb{width:10px;height:10px;border:2px solid white}#progress{font-family:monospace;color:#71866a;font-size:10px;min-width:31px;text-align:right}.cycle-label{font-size:9px;color:#a4af99;margin-left:4px}.canvas-footer{height:38px;border-top:1px solid #edf0e9;background:#fafbf7;display:flex;align-items:center;justify-content:space-between;padding:0 23px;font-size:9px;color:#9aa68f;gap:10px}.canvas-footer>span:first-child{display:flex;align-items:center;gap:5px}.canvas-footer i{width:4px;height:4px;border-radius:50%;background:#91a97d;margin-right:3px}.canvas-footer strong{font-family:monospace;font-weight:400;color:#758a66}.explanation{display:flex;gap:35px;align-items:center;margin-top:25px;padding:0 3px}.explain-index{font-size:11px;color:#6f8367;white-space:nowrap}.explain-index span{margin-left:10px;color:#a2ae93}.explanation p{font-size:10px;color:#829078;line-height:1.9;margin:0}.explanation p>span{color:#a2ad97}.formula{margin-left:auto;white-space:nowrap;font-size:10px;letter-spacing:2px;color:#a6b29a}#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#293e31;color:#fff;padding:12px 20px;border-radius:8px;font-size:12px;box-shadow:0 6px 30px #0002;opacity:0;pointer-events:none;transition:opacity .2s;z-index:10}#toast.visible{opacity:1}
+@media(min-width:1500px){main{padding-top:48px}.canvas-wrap{min-height:550px}}
+@media(max-width:950px){main{padding:30px 3%}.studio{grid-template-columns:240px minmax(0,1fr)}.controls{padding:22px 16px}.brand-en{display:none}.formula{display:none}.intro-symbol{display:none}.canvas-toolbar,.playback,.canvas-footer{padding-left:15px;padding-right:15px}.cycle-label{display:none}.canvas-wrap{min-height:460px}}
+@media(max-width:650px){.topbar{height:63px;padding:0 5%}.brand strong{font-size:15px}.brandmark{font-size:25px}.top-note{font-size:9px;letter-spacing:0}main{padding:25px 4%}.intro{margin-bottom:23px}.eyebrow{font-size:7px;letter-spacing:1.5px}h1{font-size:25px;letter-spacing:0}.intro p{font-size:11px}.studio{display:flex;flex-direction:column}.workspace{order:0}.controls{order:1;border-right:0;border-top:1px solid var(--border);padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:20px}.control-section{border:0;padding:0;margin:0;min-width:0}.section-heading{gap:6px;margin-bottom:12px}h2{font-size:11px}.step{width:21px;height:21px;font-size:9px}.presets{gap:4px}.preset{font-size:9px;padding:8px 0}.preset span{font-size:21px}.draw-button{font-size:10px;padding:8px}.draw-button svg{width:12px}.small-note{font-size:9px}.count-row{margin-bottom:0}#count-number{font-size:25px;width:55px}.count-label{font-size:10px}.range-labels{font-size:8px;margin-bottom:9px}.count-presets{gap:5px}.count-presets button{padding:5px}.options{grid-column:1/-1;border-top:1px solid var(--border);padding-top:16px;display:grid;grid-template-columns:1fr 1fr;column-gap:20px}.options .section-heading{grid-column:1/-1}.options .speed-row{margin:2px 0 10px;grid-column:1/-1;justify-content:start;gap:20px}.toggle-row{margin:6px 0}.aside-footer{display:none}.canvas-wrap{min-height:380px}.canvas-toolbar{height:44px}.canvas-corner{left:15px;top:16px;font-size:12px}.legend{left:15px;bottom:18px;font-size:8px}.drawing-actions{left:12px;right:12px;bottom:15px;justify-content:center;background:#fcfdfbe6;padding:6px}.canvas-wrap.drawing .legend{display:none}.playback{padding:12px 15px;gap:8px}.canvas-footer{font-size:8px}.explanation{gap:14px;align-items:start;margin-top:20px}.explain-index{font-size:10px;padding-top:3px}.explain-index span{display:none}.explanation p{font-size:9px}.explanation br{display:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.editable-count{align-items:center}.editable-count #count-number{border:1px solid #becdb9;border-radius:7px;background:#fff;padding:5px 7px;width:90px;font-size:25px;appearance:auto;-moz-appearance:auto}.editable-count #count-number::-webkit-inner-spin-button{appearance:auto;opacity:1}.parameters{background:#fcfcf9;border:1px solid #dce2d7;border-radius:14px;margin-top:24px;padding:26px}.parameter-heading{display:flex;align-items:center;justify-content:space-between;gap:15px}.parameter-heading h2{font-size:19px;letter-spacing:.4px}.parameter-heading p{font-size:11px;line-height:1.8;color:#86947f;margin:10px 0 0}.parameter-jump{font-size:12px;color:#507557;white-space:nowrap;text-decoration:none;padding:9px 13px;border:1px solid #dbe4d5;border-radius:7px}.parameter-formula{font-family:Georgia,serif;font-size:20px;color:#50765c;margin:21px 0;padding:15px 18px;background:#f0f4eb;border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}.parameter-formula span{font-family:"Segoe UI","Microsoft YaHei",sans-serif;font-size:11px;color:#86977b}.parameter-formula b{font-family:monospace;font-weight:400}.matrix-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.matrix-field{min-width:0}.matrix-field label{display:flex;align-items:baseline;justify-content:space-between;gap:5px;font-size:12px;color:#53734f}.matrix-field label span{font-size:10px;color:#9ba78f}.matrix-field p{font-size:10px;line-height:1.6;min-height:16px;color:#91a184;margin:9px 0 13px}.matrix-brackets{position:relative;padding:7px 12px;background:#fff}.matrix-brackets:before,.matrix-brackets:after{content:"";position:absolute;top:0;bottom:0;width:7px;border-top:2px solid #a6baa0;border-bottom:2px solid #a6baa0;pointer-events:none}.matrix-brackets:before{left:0;border-left:2px solid #a6baa0}.matrix-brackets:after{right:0;border-right:2px solid #a6baa0}.matrix-field textarea{display:block;width:100%;height:202px;resize:vertical;border:0;background:#fff;color:#345f44;font:12px/1.85 Consolas,monospace;padding:3px 6px;tab-size:2}.matrix-help{font-size:10px;line-height:1.9;color:#8d9d80;margin:16px 0}.matrix-actions{display:flex;flex-wrap:wrap;gap:9px;align-items:center}.matrix-actions button{border:1px solid #d3dfca;background:#fff;color:#5b7753;padding:10px 13px;border-radius:6px;font-size:11px}.matrix-actions button.primary{background:#21735b;border-color:#21735b;color:#fff}.number-label{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:11px;color:#839675;cursor:pointer}.number-label input{accent-color:#21735b}.matrix-status-row{display:flex;justify-content:space-between;gap:15px;align-items:center;font-size:10px;color:#849774;margin-top:14px;min-height:32px}.matrix-status-row p{margin:0;line-height:1.8}.matrix-status-row>span{font:11px monospace;white-space:nowrap}#matrix-error{font-size:12px;line-height:1.8;background:#fbeee8;color:#ac4f35;padding:12px;border-radius:6px;margin:10px 0}#parameter-details{border-top:1px solid #e0e7da;margin-top:14px;padding-top:16px}#parameter-details summary{font-size:12px;color:#587a50;cursor:pointer}#parameter-details summary>span{float:right;color:#95a787}.table-note{font-size:10px;line-height:1.8;color:#8b9a7e;margin:13px 0}.parameter-table-wrap{overflow:auto;max-height:370px;border:1px solid #e0e7da;border-radius:6px}.parameter-table{width:100%;border-collapse:collapse;white-space:nowrap;font:11px/1.8 Consolas,monospace}.parameter-table th{font-family:"Segoe UI","Microsoft YaHei",sans-serif;font-size:10px;font-weight:500;text-align:left;color:#64805a;background:#f0f4eb;position:sticky;top:0;z-index:1}.parameter-table th,.parameter-table td{padding:9px 13px;border-bottom:1px solid #e9eee3}.parameter-table td{color:#637b58}.parameter-table tr:nth-child(even){background:#f7f9f3}.canvas-corner{font-size:13px}
+@media(max-width:800px){.matrix-grid{gap:12px}.matrix-field label{display:block}.matrix-field label span{display:block;margin-top:5px}.matrix-field p{min-height:34px}.matrix-field textarea{font-size:10px;padding:2px;height:180px}.number-label{margin-left:0}.parameters{padding:20px}.parameter-heading h2{font-size:17px}.parameter-jump{font-size:10px;padding:7px}.parameter-formula{font-size:17px}.matrix-status-row{align-items:start}.parameter-table th,.parameter-table td{padding:8px}}
+@media(max-width:480px){.parameters{padding:19px 15px}.parameter-heading{align-items:start}.parameter-heading .eyebrow{font-size:7px}.parameter-heading h2{font-size:16px}.parameter-heading p{font-size:10px}.parameter-jump{font-size:9px;padding:6px;flex-shrink:0}.matrix-grid{grid-template-columns:1fr}.matrix-field label{display:flex;font-size:12px}.matrix-field label span{display:inline;font-size:10px;margin:0}.matrix-field p{min-height:0;font-size:10px;margin:6px 0 9px}.matrix-field textarea{height:145px;font-size:12px}.matrix-brackets{padding:7px 13px}.matrix-help{font-size:9px}.parameter-formula{padding:12px;font-size:16px;gap:9px}.parameter-formula span{font-size:9px}.matrix-actions{gap:8px}.matrix-actions button{font-size:10px;padding:9px}.matrix-status-row{font-size:9px}.matrix-status-row>span{font-size:9px}.editable-count #count-number{width:74px;font-size:23px}.canvas-corner{font-size:11px}}
+#paste-details{border-top:1px solid #e0e7da;margin-top:14px;padding-top:16px}#paste-details summary{font-size:12px;color:#587a50;cursor:pointer}#paste-details summary>span{float:right;color:#95a787}.paste-label{display:block;font-size:11px;color:#6a855d;margin:12px 0 8px}#table-paste{width:100%;height:130px;border:1px solid #d7e1cd;border-radius:7px;padding:12px;background:#fff;color:#345f44;font:12px/1.8 Consolas,monospace;resize:vertical;tab-size:12;margin-bottom:12px}.paste-tip{font-size:10px;color:#8b9d7c;line-height:1.8;overflow-wrap:anywhere}#paste-error{font-size:12px;line-height:1.8;background:#fbeee8;color:#ac4f35;padding:12px;border-radius:6px;margin:10px 0}
+.matrix-copy-options{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 19px;font-size:11px;color:#65825d}.matrix-copy-options select{max-width:100%;font-size:11px}.matrix-copy-options>span{font-size:10px;color:#8b9b7d}.matrix-copy-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:11px}.matrix-copy-buttons button,.copy-all-row button{border:1px solid #cddcc4;border-radius:6px;background:#f1f6ec;color:#55774b;padding:9px 12px;font-size:11px}.copy-all-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}.copy-all-row span{font-size:10px;line-height:1.8;color:#91a083}#copy-fallback{background:#f0f5ea;border-radius:7px;padding:12px;margin:12px 0}#copy-fallback label{display:block;font-size:11px;color:#5d7d51;margin-bottom:8px}#copy-output{width:100%;height:90px;resize:vertical;border:1px solid #cddcc4;border-radius:5px;color:#345f44;font:12px/1.8 Consolas,monospace;padding:9px}
+@media(max-width:800px){.matrix-copy-buttons{gap:12px}}@media(max-width:480px){.matrix-copy-buttons{gap:6px}.matrix-copy-buttons button{font-size:10px;padding:8px 3px}.matrix-copy-options>span{font-size:9px}.matrix-copy-options select{font-size:10px}.copy-all-row span{font-size:9px}}
+.matrix-field-actions{display:flex;gap:8px;margin-top:11px}.matrix-field-actions button{flex:1;border:1px solid #cddcc4;border-radius:6px;background:#f1f6ec;color:#55774b;padding:9px 8px;font-size:11px}.matrix-field-actions button[data-copy-selection]{border-color:#91b49b;background:#eaf3e6}.matrix-field-actions button:disabled{opacity:.4;cursor:default}
+.desmos-export{border-color:#acc7b1;background:#fafdf8}.desmos-badge{padding:9px 16px;color:#21735b;background:#eaf3e5;border-radius:7px;white-space:nowrap;font:17px Georgia,serif}.desmos-settings{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin:22px 0 14px;font-size:11px;color:#6b865f}.desmos-settings>label:last-child{display:flex;align-items:center;gap:5px;margin-left:auto}.desmos-settings input{accent-color:#21735b}.desmos-summary{font-size:11px;line-height:1.8;color:#547a4d;padding:10px 13px;background:#edf5e7;border-radius:6px;margin:0 0 20px}.desmos-list{min-width:0}.desmos-list label{font-size:12px;color:#54774b;display:block;margin-bottom:10px}.desmos-list textarea{width:100%;height:140px;resize:vertical;border:1px solid #cfdfc6;border-radius:6px;padding:10px;background:#fff;color:#3c6944;font:11px/1.8 Consolas,monospace;overflow-wrap:anywhere}.desmos-list button{width:100%;border:1px solid #a7c19e;border-radius:6px;background:#eaf3e4;color:#45743b;font-size:12px;padding:10px;margin-top:8px}@media(max-width:650px){.desmos-settings>label:last-child{margin-left:0;font-size:10px}.desmos-badge{font-size:13px;padding:8px}.desmos-summary{font-size:10px}.desmos-list textarea{height:110px}}
+.uniform-speed-control{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:12px;color:#54774b;margin:18px 0 9px}.uniform-speed-control>div{display:flex;align-items:center;gap:6px}.uniform-speed-control input{width:91px;border:1px solid #a8c39e;border-radius:6px;background:#fff;padding:7px 9px;color:#21735b;font:17px Consolas,monospace}.uniform-speed-hint{font-size:10px;color:#8b9d7c;line-height:1.8}#speed-scale-note{margin:9px 0 14px}
+#image-dialog{width:min(760px,94vw);max-height:92vh;overflow:auto;border:1px solid #c7d7bc;border-radius:15px;background:#fcfdf9;padding:25px;color:#3d5b40;box-shadow:0 25px 90px #1d392b44}#image-dialog::backdrop{background:#19332375;backdrop-filter:blur(4px)}.image-dialog-heading{display:flex;justify-content:space-between;align-items:start;gap:15px}.image-dialog-heading h2{font-size:21px}.image-dialog-heading>button{border:0;background:transparent;color:#8ba07e;font-size:27px;line-height:1}.image-intro{font-size:11px;line-height:1.9;color:#85977b;margin:15px 0 20px}.image-preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px}.image-preview-grid figure{margin:0;min-width:0}.image-preview-grid figcaption{font-size:11px;color:#708c64;margin-bottom:9px}.image-preview-grid canvas{position:static;inset:auto;display:block;width:100%;height:225px;object-fit:contain;border:1px solid #dae4d2;border-radius:8px;background:#fff;touch-action:auto}.image-controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px 16px;margin:20px 0 17px;font-size:11px;color:#65855a}.image-controls>label:first-child{white-space:nowrap}.image-controls output{font-family:monospace;margin-left:6px}#image-threshold{flex:1;min-width:80px;width:auto}.image-controls>button{background:#f1f6e9;border:1px solid #d1dfc4;border-radius:5px;color:#638552;font-size:10px;padding:7px}.image-invert{display:flex;align-items:center;gap:6px;flex-basis:100%;cursor:pointer}.image-invert input{accent-color:#21735b}.image-contour-label{font-size:11px;color:#6c885f;display:block;margin-bottom:8px}#image-contour{max-width:100%;width:100%;padding:8px 10px}#image-status{font-size:11px;line-height:1.8;color:#789369;margin:12px 0}#image-error{background:#fbeee8;color:#ac4f35;padding:10px;border-radius:6px;font-size:11px;line-height:1.8}.image-dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.image-dialog-actions button{font-size:12px;padding:10px 15px;border:1px solid #cbdcbd;border-radius:6px;background:#f5f8f0;color:#658958}.image-dialog-actions button.primary{background:#21735b;border-color:#21735b;color:#fff}.image-local-note{font-size:9px;line-height:1.9;color:#98aa87;margin:15px 0 0}.image-dragover{box-shadow:inset 0 0 0 3px #21735b}.image-dragover:after{content:'松开以导入图片';position:absolute;inset:0;background:#eef6e7e8;display:grid;place-items:center;color:#21735b;font-size:19px;pointer-events:none}@media(max-width:650px){#image-dialog{padding:18px}.image-dialog-heading h2{font-size:18px}.image-preview-grid{gap:10px}.image-preview-grid canvas{height:160px}.image-intro{font-size:10px}.image-controls{font-size:10px;gap:10px}.image-local-note{font-size:8px}}
+</style><script type="module">const TAU = Math.PI * 2;
+const DURATION = 9;
+const MAX_CIRCLES = 511;
+
+// Desmos interprets JS-style 1e-16 as an expression with Euler's e, not a numeric literal.
+function serializeDesmosList(values) {
+  return '[' + values.map(value => {
+    if(!Number.isFinite(value))throw new Error('列表只能包含有限数字。');
+    const text=String(value),[mantissa,exponent]=text.toLowerCase().split('e');
+    if(exponent===undefined)return text;
+    const sign=mantissa.startsWith('-')?'-':'',unsigned=mantissa.replace(/^[+-]/,''),digits=unsigned.replace('.','');
+    const point=unsigned.split('.')[0].length+Number(exponent);
+    if(point<=0)return sign+'0.'+'0'.repeat(-point)+digits;
+    if(point>=digits.length)return sign+digits+'0'.repeat(point-digits.length);
+    return sign+digits.slice(0,point)+'.'+digits.slice(point);
+  }).join(', ') + ']';
+}
+
+// Match x=sum(b*sin(K*(a+c*t))), y=sum(b*cos(K*(a+c*t))), K=200*pi/180.
+// Reflect canvas y into Cartesian y, and let Desmos t span either 1 or 9 units.
+function desmosParameters(data, count, {domain = 1, includeCenter = false, speedScale = 1} = {}) {
+  if(!Number.isFinite(speedScale)||speedScale<=0)throw new Error('速度倍率必须大于 0。');
+  const k = 200 * Math.PI / 180;
+  const terms = data.terms.slice(0, count);
+  const a = terms.map(term => (term.phase + Math.PI / 2) / k);
+  const b = terms.map(term => term.amp);
+  const c = terms.map(term => TAU * term.freq / (k * domain) * speedScale);
+  if (includeCenter && Math.hypot(data.center.x, data.center.y) > 1e-15) {
+    a.unshift(Math.atan2(data.center.x, -data.center.y) / k);
+    b.unshift(Math.hypot(data.center.x, data.center.y));
+    c.unshift(0);
+  }
+  return {a, b, c, tMax:domain/speedScale};
+}
+
+function normalizeMatrixText(text) {
+  return text.trim().replaceAll('，',',').replaceAll('；',';').replaceAll('【','[').replaceAll('】',']').replaceAll('−','-');
+}
+
+function serializeVector(values, shape = 'vector') {
+  const numbers=values.map(n=>{if(!Number.isFinite(n))throw new Error('矩阵含有无效数字。');return n;});
+  if(shape==='column')return '['+numbers.map(n=>'['+n+']').join(', ')+']';
+  const vector='['+numbers.join(', ')+']';
+  return shape==='row'?'['+vector+']':vector;
+}
+
+// Accept row/column vectors as JSON or MATLAB-style semicolon/newline vectors.
+function parseVector(text, label = '矩阵') {
+  const value = normalizeMatrixText(text);
+  if (!value) throw new Error(`${label}不能为空。`);
+  let values;
+  try {
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) throw new Error();
+    const vector=parsed.length===1 && Array.isArray(parsed[0]) ? parsed[0] : parsed;
+    values = vector.map(item => Array.isArray(item) && item.length === 1 ? item[0] : item);
+    if (values.some(item => typeof item !== 'number')) throw new Error();
+  } catch {
+    if (/\[.*\[/s.test(value) || !/^[\s\[\],;+.\deE-]+$/.test(value)) throw new Error(`${label}请使用数字组成的行向量或列向量。`);
+    const inner = value.replace(/^\[/, '').replace(/\]$/, '').trim();
+    if (/[\[\]]/.test(inner) || !inner) throw new Error(`${label}格式不正确。`);
+    const parts = inner.split(/[\s,;]+/);
+    if (parts.some(part => !/^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i.test(part))) throw new Error(`${label}含有无效数字。`);
+    values = parts.map(Number);
+  }
+  if (!values.length || values.length > MAX_CIRCLES) throw new Error(`${label}需要 1–${MAX_CIRCLES} 个数字。`);
+  if (values.some(number => !Number.isFinite(number))) throw new Error(`${label}只能包含有限数字。`);
+  return values;
+}
+
+function termsFromVectors(omega, phase, radius) {
+  if (omega.length !== phase.length || omega.length !== radius.length) throw new Error('三个矩阵的元素个数必须相同，每一行对应同一个圆。');
+  if (!omega.length || omega.length > MAX_CIRCLES) throw new Error(`圆圈数量需要在 1–${MAX_CIRCLES} 之间。`);
+  return omega.map((w, i) => {
+    if (![w, phase[i], radius[i]].every(Number.isFinite)) throw new Error(`第 ${i+1} 个圆含有无效数字。`);
+    if (Math.abs(w) > 1000) throw new Error(`第 ${i+1} 个圆的角速度须在 −1000 到 1000 rad/s 之间。`);
+    if (Math.abs(phase[i]) > 1e6) throw new Error(`第 ${i+1} 个圆的角度绝对值不能大于 1000000 rad。`);
+    if (radius[i] < 0 || radius[i] > 1000) throw new Error(`第 ${i+1} 个圆的半径须在 0 到 1000 之间。`);
+    return {freq:w*DURATION/TAU, phase:phase[i], amp:radius[i], re:radius[i]*Math.cos(phase[i]), im:radius[i]*Math.sin(phase[i])};
+  });
+}
+
+function parseParameterTable(text) {
+  const value = normalizeMatrixText(text);
+  if (!value) throw new Error('请先粘贴参数表，每行依次为角速度、初始角度、半径。');
+  let rows;
+  try {
+    const parsed=JSON.parse(value);
+    if (!Array.isArray(parsed) || !parsed.every(row=>Array.isArray(row) && row.length===3 && row.every(n=>typeof n==='number'))) throw new Error();
+    rows=parsed;
+  } catch {
+    if (/\[.*\[/s.test(value) || !/^[\s\[\],;+.\deE-]+$/.test(value)) throw new Error('整表请使用数字，每行三列；支持 Excel 表格或 [[角速度, 角度, 半径], ...]。');
+    const inner=value.replace(/^\[/,'').replace(/\]$/,'').trim();
+    rows=inner.split(/[;\r\n]+/).filter(row=>row.trim()).map((row,i)=>{
+      const numbers=parseVector(row,`第 ${i+1} 行`);
+      if(numbers.length!==3) throw new Error(`第 ${i+1} 行需要三列：角速度、初始角度、半径。`);
+      return numbers;
+    });
+  }
+  if(!rows.length) throw new Error('参数表不能为空。');
+  const vectors=[0,1,2].map(col=>rows.map(row=>row[col]));
+  termsFromVectors(...vectors);
+  return vectors;
+}
+
+// Resample a closed stroke by arc length, so pointer speed does not affect the result.
+function resampleClosed(points, size = 512) {
+  if (points.length < 2) throw new Error('请先画出一条线。');
+  const pts = points.map(p => ({x: p.x, y: p.y}));
+  pts.push({...pts[0]});
+  const lengths = [0];
+  for (let i = 1; i < pts.length; i++) lengths.push(lengths[i - 1] + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y));
+  const total = lengths.at(-1);
+  if (total < 0.0001) throw new Error('图形太小，请再画大一些。');
+  let j = 1;
+  return Array.from({length: size}, (_, i) => {
+    const distance = total * i / size;
+    while (j < lengths.length - 1 && lengths[j] < distance) j++;
+    const span = lengths[j] - lengths[j - 1];
+    const a = span ? (distance - lengths[j - 1]) / span : 0;
+    return {x: pts[j - 1].x + (pts[j].x - pts[j - 1].x) * a, y: pts[j - 1].y + (pts[j].y - pts[j - 1].y) * a};
+  });
+}
+
+function transform(points) {
+  const n = points.length;
+  const coefficients = Array.from({length: n}, (_, k) => {
+    let re = 0, im = 0;
+    for (let j = 0; j < n; j++) {
+      const angle = TAU * k * j / n, c = Math.cos(angle), s = Math.sin(angle);
+      re += points[j].x * c + points[j].y * s;
+      im += points[j].y * c - points[j].x * s;
+    }
+    re /= n; im /= n;
+    return {freq: k <= n / 2 ? k : k - n, re, im, amp: Math.hypot(re, im), phase: Math.atan2(im, re)};
+  });
+  return {center: {x: coefficients[0].re, y: coefficients[0].im}, terms: coefficients.slice(1).sort((a, b) => b.amp - a.amp)};
+}
+
+function endpoint(data, count, time) {
+  let x = data.center.x, y = data.center.y;
+  for (const c of data.terms.slice(0, count)) {
+    const angle = TAU * c.freq * time + c.phase;
+    x += c.amp * Math.cos(angle); y += c.amp * Math.sin(angle);
+  }
+  return {x, y};
+}
+
+function normalize(points) {
+  const xs = points.map(p => p.x), ys = points.map(p => p.y);
+  const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+  const scale = 2 / Math.max(maxX - minX, maxY - minY, 0.001);
+  return points.map(p => ({x: (p.x - (minX + maxX) / 2) * scale, y: (p.y - (minY + maxY) / 2) * scale}));
+}
+
+function autoImageThreshold(rgba) {
+  const histogram=new Float64Array(256);let total=0,sum=0;
+  for(let i=0;i<rgba.length;i+=4){
+    const alpha=rgba[i+3]/255;if(alpha<.03)continue;
+    const gray=Math.round((.2126*rgba[i]+.7152*rgba[i+1]+.0722*rgba[i+2])*alpha+255*(1-alpha));
+    histogram[gray]++;total++;sum+=gray;
+  }
+  let weight=0,subtotal=0,best=0,threshold=160;
+  for(let t=0;t<255;t++){
+    weight+=histogram[t];subtotal+=histogram[t]*t;
+    if(!weight||weight===total)continue;
+    const variance=weight*(total-weight)*(subtotal/weight-(sum-subtotal)/(total-weight))**2;
+    if(variance>best){best=variance;threshold=t;}
+  }
+  return threshold;
+}
+
+// Trace cell boundaries in order; diagonal contacts stay in the same 8-connected stroke.
+function traceBinaryContours(mask,width,height) {
+  const edges=[],outgoing=new Map(),stride=width+1;
+  function add(x,y,nx,ny,direction){
+    const from=y*stride+x,to=ny*stride+nx,index=edges.length;
+    edges.push({from,to,direction,used:false});
+    if(!outgoing.has(from))outgoing.set(from,[]);outgoing.get(from).push(index);
+  }
+  for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+    if(!mask[y*width+x])continue;
+    if(y===0||!mask[(y-1)*width+x])add(x,y,x+1,y,0);
+    if(x===width-1||!mask[y*width+x+1])add(x+1,y,x+1,y+1,1);
+    if(y===height-1||!mask[(y+1)*width+x])add(x+1,y+1,x,y+1,2);
+    if(x===0||!mask[y*width+x-1])add(x,y+1,x,y,3);
+  }
+  const contours=[];
+  for(let first=0;first<edges.length;first++){
+    if(edges[first].used)continue;
+    const points=[],start=edges[first].from;let index=first,closed=false;
+    for(let guard=0;guard<=edges.length;guard++){
+      const edge=edges[index];if(edge.used)break;edge.used=true;
+      points.push({x:edge.from%stride,y:Math.floor(edge.from/stride)});
+      if(edge.to===start){closed=true;break;}
+      const next=(outgoing.get(edge.to)||[]).filter(i=>!edges[i].used);
+      if(!next.length)break;
+      const priority=[1,2,3,0];
+      next.sort((a,b)=>priority[(edges[a].direction-edge.direction+4)%4]-priority[(edges[b].direction-edge.direction+4)%4]);
+      index=next[0];
+    }
+    if(!closed||points.length<3)continue;
+    let signedArea=0;
+    for(let i=0;i<points.length;i++){const p=points[i],q=points[(i+1)%points.length];signedArea+=p.x*q.y-q.x*p.y;}
+    signedArea/=2;
+    const corners=points.filter((p,i)=>{const before=points[(i+points.length-1)%points.length],after=points[(i+1)%points.length];return (p.x-before.x)*(after.y-p.y)!==(p.y-before.y)*(after.x-p.x);});
+    const step=Math.max(1,Math.ceil(corners.length/16384));
+    contours.push({points:corners.filter((_,i)=>i%step===0),area:Math.abs(signedArea),hole:signedArea<0});
+  }
+  return contours.sort((a,b)=>b.area-a.area);
+}
+
+function imageContours({data,width,height},{threshold=160,invert=false,minArea=3}={}) {
+  const mask=new Uint8Array(width*height);
+  for(let i=0;i<mask.length;i++){
+    const offset=i*4,alpha=data[offset+3]/255;
+    const gray=(.2126*data[offset]+.7152*data[offset+1]+.0722*data[offset+2])*alpha+255*(1-alpha);
+    mask[i]=alpha>=.03&&(invert?gray>=threshold:gray<=threshold)?1:0;
+  }
+  return traceBinaryContours(mask,width,height).filter(c=>c.area>=minArea&&c.points.length>=3).slice(0,100);
+}
+
+
+const $ = id => document.getElementById(id);
+const canvas = $('canvas'), ctx = canvas.getContext('2d'), wrap = $('canvas-wrap');
+let width=0,height=0,scale=1,dpr=1,source=[],data,curve=[],count=40,time=0,playing=!matchMedia('(prefers-reduced-motion: reduce)').matches,speed=.1,last=0;
+let drawMode=false,stroke=[],pointer=null,wasPlaying=false,currentName='爱心',toastTimer;
+let fourierData,customMode=false,viewExtent=1,curveSteps=1024,tableCells=[],lastTableTime=-Infinity;
+const names={heart:'爱心',star:'星星',butterfly:'蝴蝶',flower:'花朵'};
+
+function preset(name) {
+  const pts=[];
+  if(name==='star') {
+    for(let i=0;i<10;i++){const a=i*TAU/10-Math.PI/2,r=i%2?.44:1;pts.push({x:r*Math.cos(a),y:r*Math.sin(a)});}
+  } else {
+    for(let i=0;i<800;i++) {
+      const t=TAU*i/800;
+      if(name==='heart') pts.push({x:16*Math.sin(t)**3,y:-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))});
+      if(name==='flower'){const r=.7+.27*Math.cos(5*t);pts.push({x:r*Math.cos(t),y:r*Math.sin(t)});}
+      if(name==='butterfly'){const r=Math.exp(Math.cos(t))-2*Math.cos(4*t)+Math.sin(t/12)**5;pts.push({x:Math.sin(t)*r,y:-Math.cos(t)*r});}
+    }
+  }
+  return pts;
+}
+
+function loadShape(points,name) {
+  source=resampleClosed(normalize(points));data=transform(source);fourierData=data;customMode=false;currentName=name;
+  $('shape-name').textContent=name;
+  rebuild();
+}
+
+function rebuild() {
+  time=0;
+  const maxFrequency=Math.max(...data.terms.slice(0,count).map(c=>Math.abs(c.freq)),1);
+  curveSteps=Math.min(32768,Math.max(1024,Math.ceil(maxFrequency*16)));
+  curve=Array.from({length:curveSteps+1},(_,i)=>endpoint(data,count,i/curveSteps));
+  const total=data.terms.reduce((sum,c)=>sum+c.amp*c.amp,0);
+  const retained=data.terms.slice(0,count).reduce((sum,c)=>sum+c.amp*c.amp,0);
+  const error=Math.sqrt(Math.max(0,total-retained)/Math.max(total,1e-20))*100;
+  $('accuracy').textContent=customMode?'自定义矩阵 · 9 秒模拟时段':`相对均方根误差 ${error<.01?'< 0.01':error.toFixed(2)}%`;
+  viewExtent=1;
+  if(customMode){
+    for(const p of curve)viewExtent=Math.max(viewExtent,Math.abs(p.x),Math.abs(p.y));
+    for(let j=0;j<=24;j++){
+      let x=data.center.x,y=data.center.y;
+      for(const c of data.terms.slice(0,count)){
+        viewExtent=Math.max(viewExtent,Math.abs(x)+c.amp,Math.abs(y)+c.amp);
+        const a=TAU*c.freq*j/24+c.phase;x+=c.amp*Math.cos(a);y+=c.amp*Math.sin(a);
+      }
+    }
+  }
+  scale=Math.min(width,height)*.31/viewExtent;
+  refreshParameters();sync();render();
+}
+
+function setCount(value) {
+  count=Math.max(1,Math.min(MAX_CIRCLES,Math.round(Number(value)||1)));
+  if(customMode)while(data.terms.length<count)data.terms.push({freq:0,phase:0,amp:0,re:0,im:0});
+  $('count').value=count;$('count-number').value=count;$('circle-stat').textContent=count;
+  $('count').style.background=`linear-gradient(to right,#21735b ${(count-1)/(MAX_CIRCLES-1)*100}%,#e1e7dd ${(count-1)/(MAX_CIRCLES-1)*100}%)`;
+  document.querySelectorAll('[data-count]').forEach(b=>{b.classList.toggle('active',Number(b.dataset.count)===count);b.setAttribute('aria-pressed',String(Number(b.dataset.count)===count));});
+  if(data)rebuild();
+}
+
+function sync() {
+  $('play').textContent=playing?'Ⅱ':'▶';$('play').setAttribute('aria-label',playing?'暂停动画':'播放动画');
+  $('mode-label').textContent=drawMode?'手绘模式':playing?'正在描绘':'已暂停';
+  $('simulation-time').textContent=`t = ${(time*DURATION).toFixed(2)} s`;
+  document.querySelector('.cycle-label').textContent=customMode?'9 秒时段':'一个周期';
+  $('timeline').value=Math.round(time*1000);$('progress').textContent=Math.round(time*100)+'%';
+  $('timeline').style.background=`linear-gradient(to right,#83a98d ${time*100}%,#e1e7dd ${time*100}%)`;
+}
+
+function resize() {
+  const rect=wrap.getBoundingClientRect();width=rect.width;height=rect.height;dpr=Math.min(devicePixelRatio||1,2);
+  canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
+  scale=Math.min(width,height)*.31/(drawMode?1:viewExtent);render();
+}
+function path(points,close=false) {
+  if(!points.length)return;ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);if(close)ctx.closePath();ctx.stroke();
+}
+
+function render() {
+  if(!width||!data)return;
+  ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
+  ctx.translate(width/2,height/2);ctx.scale(scale,scale);
+  // Quiet coordinate axes establish the common origin without competing with the drawing.
+  ctx.strokeStyle='#e8eee3';ctx.lineWidth=1/scale;ctx.beginPath();ctx.moveTo(-width/2/scale,0);ctx.lineTo(width/2/scale,0);ctx.moveTo(0,-height/2/scale);ctx.lineTo(0,height/2/scale);ctx.stroke();
+  if(drawMode) {
+    ctx.strokeStyle='#21735b';ctx.lineWidth=2.4/scale;ctx.lineCap='round';ctx.lineJoin='round';path(stroke);
+    if(stroke.length>1){ctx.setLineDash([4/scale,5/scale]);ctx.lineWidth=1/scale;ctx.strokeStyle='#b1bda9';path([stroke.at(-1),stroke[0]]);ctx.setLineDash([]);}
+    return;
+  }
+  if($('reference').checked){ctx.strokeStyle='#bdc9b4';ctx.lineWidth=1.2/scale;ctx.setLineDash([3/scale,5/scale]);path(source,true);ctx.setLineDash([]);}
+  let x=data.center.x,y=data.center.y;
+  if($('circles').checked) {
+    data.terms.slice(0,count).forEach((c,i)=>{
+      if(c.amp*scale>.45){ctx.beginPath();ctx.arc(x,y,c.amp,0,TAU);ctx.strokeStyle=i<3?'#82a18d80':'#9caf9260';ctx.lineWidth=1/scale;ctx.stroke();}
+      const a=TAU*c.freq*time+c.phase, nx=x+c.amp*Math.cos(a),ny=y+c.amp*Math.sin(a);
+      ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(nx,ny);ctx.strokeStyle='#69947999';ctx.lineWidth=1/scale;ctx.stroke();
+      if(i<7){ctx.beginPath();ctx.arc(x,y,1.8/scale,0,TAU);ctx.fillStyle='#5e8969';ctx.fill();}
+      if($('circle-numbers').checked){ctx.font=`${10/scale}px monospace`;ctx.fillStyle='#416d55';ctx.fillText(String(i+1),x+4/scale,y-5/scale);}
+      x=nx;y=ny;
+    });
+  }else{const p=endpoint(data,count,time);x=p.x;y=p.y;}
+  const end=Math.floor(time*curveSteps),partial=curve.slice(0,end+1);partial.push({x,y});
+  ctx.strokeStyle='#e47b60';ctx.lineWidth=2.7/scale;ctx.lineCap='round';ctx.lineJoin='round';path(partial);
+  ctx.beginPath();ctx.arc(x,y,7/scale,0,TAU);ctx.fillStyle='#e47b6020';ctx.fill();
+  ctx.beginPath();ctx.arc(x,y,3.1/scale,0,TAU);ctx.fillStyle='#e47b60';ctx.fill();
+  ctx.beginPath();ctx.arc(data.center.x,data.center.y,2.5/scale,0,TAU);ctx.fillStyle='#4b8061';ctx.fill();
+  updateLiveTable();
+}
+
+function animate(now) {
+  if(last&&playing&&!drawMode&&!document.hidden){time+=Math.min((now-last)/1000,.1)*speed/DURATION;if(time>1){if(customMode){time=1;playing=false;}else time%=1;}sync();render();}
+  last=now;if(playing&&!drawMode)render();requestAnimationFrame(animate);
+}
+
+function toast(message){$('toast').textContent=message;$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),3000);}
+function enterDraw() {
+  if(drawMode)return;wasPlaying=playing;drawMode=true;playing=false;stroke=[];pointer=null;
+  wrap.classList.add('drawing');$('draw').classList.add('active');$('drawing-actions').hidden=false;$('draw-hint').hidden=false;
+  $('convert').disabled=true;$('draw-note').textContent='请一笔画完，首尾会自动连接。';
+  for(const id of ['play','restart','timeline','export'])$(id).disabled=true;
+  scale=Math.min(width,height)*.31;sync();render();
+}
+function leaveDraw(resume=wasPlaying) {
+  drawMode=false;pointer=null;wrap.classList.remove('drawing');$('draw').classList.remove('active');$('drawing-actions').hidden=true;$('draw-hint').hidden=true;
+  $('draw-note').textContent='也可以直接选一个示例开始探索。';
+  for(const id of ['play','restart','timeline','export'])$(id).disabled=false;
+  playing=resume;scale=Math.min(width,height)*.31/viewExtent;sync();render();
+}
+function position(event){const r=canvas.getBoundingClientRect();return{x:(event.clientX-r.left-width/2)/scale,y:(event.clientY-r.top-height/2)/scale};}
+
+canvas.addEventListener('pointerdown',event=>{
+  if(!drawMode||pointer!==null||(event.pointerType==='mouse'&&event.button!==0))return;
+  event.preventDefault();pointer=event.pointerId;stroke=[position(event)];canvas.setPointerCapture(pointer);$('draw-hint').hidden=true;$('convert').disabled=true;render();
+});
+canvas.addEventListener('pointermove',event=>{
+  if(!drawMode||pointer!==event.pointerId)return;event.preventDefault();
+  for(const e of event.getCoalescedEvents?.()||[event]){const p=position(e);if(Math.hypot(p.x-stroke.at(-1).x,p.y-stroke.at(-1).y)>1.5/scale)stroke.push(p);}
+  render();
+});
+function finishStroke(event){if(pointer!==event.pointerId)return;pointer=null;$('convert').disabled=stroke.length<4;render();}
+canvas.addEventListener('pointerup',finishStroke);canvas.addEventListener('pointercancel',finishStroke);
+$('draw').onclick=enterDraw;
+$('redraw').onclick=()=>{stroke=[];$('draw-hint').hidden=false;$('convert').disabled=true;render();};
+$('cancel-draw').onclick=()=>leaveDraw();
+$('convert').onclick=()=>{
+  if(stroke.length<4){toast('请先画出一条完整的线。');return;}
+  try{const points=[...stroke];loadShape(points,'我的手绘');leaveDraw(true);document.querySelectorAll('[data-preset]').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false');});toast('转换完成，试着改变圆圈数量。');}catch(error){toast(error.message);}
+};
+document.querySelectorAll('[data-preset]').forEach(button=>{button.setAttribute('aria-pressed',String(button.classList.contains('active')));button.onclick=()=>{if(drawMode)leaveDraw(false);loadShape(preset(button.dataset.preset),names[button.dataset.preset]);playing=true;document.querySelectorAll('[data-preset]').forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button));});sync();};});
+document.querySelectorAll('[data-count]').forEach(b=>b.onclick=()=>setCount(b.dataset.count));
+$('count').oninput=event=>setCount(event.target.value);
+$('count-number').onchange=event=>setCount(event.target.value);
+$('count-number').onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();setCount(event.target.value);event.target.blur();}};
+$('speed').onchange=event=>setUniformSpeed(event.target.value);
+$('circles').onchange=render;$('reference').onchange=render;
+$('circle-numbers').onchange=render;
+$('play').onclick=()=>{playing=!playing;if(time>=1&&playing)time=0;sync();render();};
+$('restart').onclick=()=>{time=0;playing=true;sync();render();};
+$('timeline').oninput=event=>{time=Number(event.target.value)/1000;playing=false;sync();render();};
+$('export').onclick=()=>{
+  const output=document.createElement('canvas');output.width=canvas.width;output.height=canvas.height;
+  const c=output.getContext('2d');c.fillStyle='#fcfdfb';c.fillRect(0,0,output.width,output.height);c.drawImage(canvas,0,0);
+  output.toBlob(blob=>{if(!blob){toast('图片生成失败，请重试。');return;}const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`傅里叶画室-${currentName}-${count}个圆.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);toast('图片已生成。');});
+};
+document.addEventListener('keydown',event=>{
+  if(event.code==='Space'&&!['INPUT','SELECT','BUTTON','TEXTAREA','A'].includes(event.target.tagName)&&!drawMode){event.preventDefault();$('play').click();}
+  if(event.code==='Escape'&&drawMode)leaveDraw();
+});
+
+const format=n=>Number(n.toPrecision(12)).toString();
+const short=n=>Math.abs(n)<1e-9?'0':Number(n.toPrecision(6)).toString();
+const matrixIds=['omega-matrix','phase-matrix','radius-matrix'];
+
+function refreshParameters(){
+  const terms=data.terms.slice(0,count);
+  $('matrix-count').textContent=count;
+  $('center-value').textContent=`(${short(data.center.x)}, ${short(data.center.y)})`;
+  const values=[terms.map(c=>c.freq*TAU/DURATION),terms.map(c=>c.phase),terms.map(c=>c.amp)];
+  matrixIds.forEach((id,i)=>{$(id).value=values[i].map(format).join('\n');$(id).removeAttribute('aria-invalid');});
+  updateSelectionButtons();
+  $('matrix-error').hidden=true;
+  $('matrix-status').textContent=customMode?'自定义参数已应用；改变数量会保留已有圆，新增圆的三个参数均为 0。':'正在显示原图的傅里叶参数，按半径从大到小排列。';
+  const fragment=document.createDocumentFragment();tableCells=[];
+  terms.forEach((c,i)=>{
+    const row=document.createElement('tr');
+    const cells=[String(i+1),short(c.freq*TAU/DURATION),short(c.phase),short(c.amp),'','',''].map(value=>{const td=document.createElement('td');td.textContent=value;row.append(td);return td;});
+    fragment.append(row);tableCells.push(cells);
+  });
+  $('parameter-rows').replaceChildren(fragment);lastTableTime=-Infinity;updateLiveTable(true);
+  refreshDesmos();
+}
+
+function refreshDesmos(){
+  const domain=Number($('desmos-domain').value),includeCenter=$('desmos-center').checked;
+  const vectors=desmosParameters(data,count,{domain,includeCenter,speedScale:speed});
+  for(const name of ['a','b','c'])$(`desmos-${name}`).value=serializeDesmosList(vectors[name].map(n=>Number(format(n))));
+  $('desmos-summary').textContent=`当前图形：${currentName} · ${vectors.a.length} 项 · 转速统一 ×${format(speed)} · Desmos 使用弧度制，t 的范围设为 0–${format(vectors.tMax)}。`;
+  $('speed-scale-note').textContent=`所有圆的转速同时乘以 ${format(speed)}，保持方向和速度比例；a、b 不变。当前需绘制到 t = ${format(vectors.tMax)} 才能描完同一段轨迹。`;
+}
+
+function setUniformSpeed(value){
+  const parsed=Number(value);
+  if(!Number.isFinite(parsed)||parsed<=0){$('uniform-speed').value=speed;toast('请输入大于 0 的速度倍率。');return;}
+  speed=Math.max(.001,Math.min(4,parsed));$('uniform-speed').value=speed;
+  let option=Array.from($('speed').options).find(item=>Number(item.value)===speed);
+  if(!option){option=new Option(`${format(speed)}×`,String(speed));option.dataset.custom='true';$('speed').add(option);}
+  $('speed').value=String(speed);
+  for(const item of Array.from($('speed').options))if(item.dataset.custom&&item!==option)item.remove();
+  refreshDesmos();sync();
+}
+
+function updateLiveTable(force=false){
+  if(!$('parameter-details').open)return;
+  const now=performance.now();if(!force&&playing&&now-lastTableTime<150)return;lastTableTime=now;
+  let x=data.center.x,y=data.center.y;
+  data.terms.slice(0,count).forEach((c,i)=>{
+    const a=TAU*c.freq*time+c.phase,nx=x+c.amp*Math.cos(a),ny=y+c.amp*Math.sin(a),cells=tableCells[i];
+    if(cells){cells[4].textContent=short((a%TAU+TAU)%TAU);cells[5].textContent=`(${short(x)}, ${short(y)})`;cells[6].textContent=`(${short(nx)}, ${short(ny)})`;}
+    x=nx;y=ny;
+  });
+}
+
+function applyMatrices(){
+  if(drawMode){toast('请先完成或取消手绘，再应用矩阵。');return;}
+  try{
+    const vectors=matrixIds.map((id,i)=>parseVector($(id).value,['角速度矩阵','初始角度矩阵','半径矩阵'][i]));
+    const terms=termsFromVectors(...vectors);
+    data={center:{...fourierData.center},terms};customMode=true;
+    $('shape-name').textContent=`自定义 · ${currentName}`;
+    document.querySelectorAll('[data-preset]').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false');});
+    playing=true;setCount(terms.length);toast(`已应用 ${terms.length} 个圆的参数。`);
+  }catch(error){$('matrix-error').textContent=error.message;$('matrix-error').hidden=false;}
+}
+matrixIds.forEach(id=>$(id).addEventListener('input',()=>{$('matrix-status').textContent='矩阵已修改，点击「应用矩阵并播放」生效。';$('matrix-error').hidden=true;}));
+$('apply-matrices').onclick=applyMatrices;
+$('restore-fourier').onclick=()=>{
+  if(drawMode){toast('请先完成或取消手绘。');return;}
+  data=fourierData;customMode=false;$('shape-name').textContent=currentName;setCount(count);toast('已恢复原图的傅里叶参数。');
+};
+$('example-matrices').onclick=()=>{
+  $('omega-matrix').value='0.698131700798\n-2.094395102393\n3.490658503989';
+  $('phase-matrix').value='0\n1.570796326795\n0';
+  $('radius-matrix').value='0.7\n0.25\n0.12';
+  applyMatrices();
+};
+$('parameter-details').ontoggle=()=>updateLiveTable(true);
+$('import-table').onclick=()=>{
+  try{
+    if(drawMode)throw new Error('请先完成或取消手绘，再导入参数。');
+    const vectors=parseParameterTable($('table-paste').value);
+    matrixIds.forEach((id,i)=>{$(id).value=vectors[i].map(format).join('\n');});
+    applyMatrices();
+  }catch(error){$('paste-error').textContent=error.message;$('paste-error').hidden=false;return;}
+  $('paste-error').hidden=true;
+};
+$('table-paste').addEventListener('input',()=>{$('paste-error').hidden=true;});
+
+async function copyParameterText(text,message='已复制，数字之间带逗号，外层带中括号。'){
+  const fallback=$('copy-output');
+  try{
+    if(!navigator.clipboard?.writeText)throw new Error();
+    await navigator.clipboard.writeText(text);$('copy-fallback').hidden=true;toast(message);
+  }catch{
+    fallback.value=text;$('copy-fallback').hidden=false;fallback.focus();fallback.select();
+    toast('复制内容已选中，按 Ctrl + C 即可。');
+  }
+}
+document.querySelectorAll('[data-copy-matrix]').forEach(button=>button.onclick=()=>{
+  try{copyParameterText(serializeVector(parseVector($(button.dataset.copyMatrix).value),$('copy-shape').value));}
+  catch(error){$('matrix-error').textContent=error.message;$('matrix-error').hidden=false;}
+});
+function selectedMatrixText(field){
+  const start=field.selectionStart,end=field.selectionEnd,text=field.value.slice(start,end);
+  if(!text)return '';
+  const numeric=char=>Boolean(char&&/[0-9.eE+-]/.test(char));
+  // Copy a fragment of a number literally; complete numbers use the matrix format.
+  if((numeric(field.value[start-1])&&numeric(text[0]))||(numeric(text.at(-1))&&numeric(field.value[end])))return text;
+  const full=start===0&&end===field.value.length;
+  const value=full?text:text.replace(/[\[\]【】]/g,'').replace(/^[\s,;，；]+|[\s,;，；]+$/g,'');
+  try{return serializeVector(parseVector(value),$('copy-shape').value);}catch{return text;}
+}
+function updateSelectionButtons(){
+  document.querySelectorAll('[data-copy-selection]').forEach(button=>{
+    const field=$(button.dataset.copySelection);button.disabled=field.selectionStart===field.selectionEnd;
+  });
+}
+document.querySelectorAll('[data-copy-selection]').forEach(button=>button.onclick=()=>{
+  const text=selectedMatrixText($(button.dataset.copySelection));
+  if(!text){toast('请先在这组矩阵里选中要复制的数字。');return;}
+  copyParameterText(text,'已复制所选内容。');
+});
+matrixIds.forEach(id=>{
+  for(const event of ['select','input','keyup','mouseup','focus'])$(id).addEventListener(event,updateSelectionButtons);
+  $(id).addEventListener('copy',event=>{
+    const text=selectedMatrixText($(id));if(!text||!event.clipboardData)return;
+    event.clipboardData.setData('text/plain',text);event.preventDefault();toast('已复制所选内容。');
+  });
+});
+document.addEventListener('selectionchange',updateSelectionButtons);
+$('copy-all-parameters').onclick=()=>{
+  try{
+    const vectors=matrixIds.map(id=>parseVector($(id).value));termsFromVectors(...vectors);
+    const rows=vectors[0].map((_,i)=>vectors.map(vector=>vector[i]));
+    copyParameterText(JSON.stringify(rows));
+  }catch(error){$('matrix-error').textContent=error.message;$('matrix-error').hidden=false;}
+};
+$('desmos-domain').onchange=refreshDesmos;
+$('uniform-speed').onchange=event=>setUniformSpeed(event.target.value);
+$('uniform-speed').onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();setUniformSpeed(event.target.value);event.target.blur();}};
+$('desmos-center').onchange=refreshDesmos;
+document.querySelectorAll('[data-copy-desmos]').forEach(button=>button.onclick=()=>copyParameterText($(`desmos-${button.dataset.copyDesmos}`).value,`已复制适配你的 Desmos 公式的 ${button.dataset.copyDesmos} 列表。`));
+
+let imagePixels=null,imagePaths=[],imageName='',imageWasPlaying=false,imageCommitted=false,imageTimer,imageLoadId=0;
+function updateImagePreview(){
+  const index=Number($('image-contour').value),selected=imagePaths[index],preview=$('image-outline'),paint=preview.getContext('2d');
+  paint.clearRect(0,0,preview.width,preview.height);paint.fillStyle='#fcfdfb';paint.fillRect(0,0,preview.width,preview.height);
+  if(selected){
+    paint.beginPath();selected.points.forEach((p,i)=>i?paint.lineTo(p.x,p.y):paint.moveTo(p.x,p.y));paint.closePath();
+    paint.fillStyle='#e47b6015';paint.fill();paint.strokeStyle='#21735b';paint.lineWidth=1.5;paint.stroke();
+    $('image-status').textContent=`找到 ${imagePaths.length} 条候选轮廓，已选择第 ${index+1} 条${selected.hole?'（内部孔洞）':'（外轮廓）'}。`;
+  }else $('image-status').textContent='未找到可用轮廓，请调整阈值或切换深浅背景。';
+  $('convert-image').disabled=!selected;
+}
+function findImageContours(){
+  clearTimeout(imageTimer);if(!imagePixels)return;
+  $('image-error').hidden=true;
+  try{
+    imagePaths=imageContours(imagePixels,{threshold:Number($('image-threshold').value),invert:$('image-invert').checked});
+    const options=imagePaths.map((contour,i)=>new Option(`轮廓 ${i+1} · ${contour.hole?'内部孔洞':'外轮廓'} · 面积 ${contour.area}`,String(i)));
+    $('image-contour').replaceChildren(...options);$('image-contour').disabled=!options.length;
+    updateImagePreview();
+  }catch(error){imagePaths=[];$('convert-image').disabled=true;$('image-error').textContent='轮廓提取失败，请尝试更简单的图案。';$('image-error').hidden=false;}
+}
+async function loadImageFile(file){
+  if(!file)return;
+  if(file.size>25*1024*1024){toast('图片超过 25 MB，请先缩小后再导入。');return;}
+  const id=++imageLoadId,url=URL.createObjectURL(file),picture=new Image();
+  try{
+    picture.src=url;await picture.decode();if(id!==imageLoadId)return;
+    const imageScale=Math.min(1,384/Math.max(picture.naturalWidth,picture.naturalHeight));
+    const w=Math.max(1,Math.round(picture.naturalWidth*imageScale)),h=Math.max(1,Math.round(picture.naturalHeight*imageScale));
+    const buffer=document.createElement('canvas');buffer.width=w+4;buffer.height=h+4;
+    const brush=buffer.getContext('2d',{willReadFrequently:true});brush.drawImage(picture,2,2,w,h);imagePixels=brush.getImageData(0,0,buffer.width,buffer.height);
+    for(const target of ['image-original','image-outline']){$(target).width=buffer.width;$(target).height=buffer.height;}
+    const preview=$('image-original').getContext('2d');preview.fillStyle='#fff';preview.fillRect(0,0,buffer.width,buffer.height);preview.drawImage(buffer,0,0);
+    imageName=file.name.replace(/\.[^.]+$/,'').slice(0,60)||'导入图形';
+    $('image-invert').checked=false;
+    const threshold=autoImageThreshold(imagePixels.data);$('image-threshold').value=threshold;$('threshold-value').value=threshold;
+    if(drawMode)leaveDraw(false);
+    if(!$('image-dialog').open){imageWasPlaying=playing;playing=false;$('image-dialog').showModal();}
+    imageCommitted=false;sync();findImageContours();
+  }catch(error){toast('无法读取这张图片，请选择 PNG、JPG、WebP 等有效图片。');}
+  finally{URL.revokeObjectURL(url);}
+}
+$('import-image').onclick=()=>$('image-file').click();
+$('image-file').onchange=event=>{loadImageFile(event.target.files[0]);event.target.value='';};
+$('image-threshold').oninput=event=>{$('threshold-value').value=event.target.value;$('convert-image').disabled=true;clearTimeout(imageTimer);imageTimer=setTimeout(findImageContours,80);};
+$('image-invert').onchange=findImageContours;
+$('auto-threshold').onclick=()=>{if(!imagePixels)return;const value=autoImageThreshold(imagePixels.data);$('image-threshold').value=value;$('threshold-value').value=value;findImageContours();};
+$('image-contour').onchange=updateImagePreview;
+$('close-image').onclick=()=>$('image-dialog').close();$('cancel-image').onclick=()=>$('image-dialog').close();
+$('image-dialog').addEventListener('close',()=>{clearTimeout(imageTimer);playing=imageCommitted?true:imageWasPlaying;sync();render();});
+$('convert-image').onclick=()=>{
+  const contour=imagePaths[Number($('image-contour').value)];if(!contour)return;
+  try{
+    loadShape(contour.points,`图片 · ${imageName}`);imageCommitted=true;$('image-dialog').close();
+    document.querySelectorAll('[data-preset]').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false');});
+    toast('图片轮廓已转换，可以调节圆数或复制 Desmos 参数。');
+  }catch(error){$('image-error').textContent=error.message;$('image-error').hidden=false;}
+};
+wrap.addEventListener('dragover',event=>{if(Array.from(event.dataTransfer.types).includes('Files')){event.preventDefault();wrap.classList.add('image-dragover');}});
+wrap.addEventListener('dragleave',()=>wrap.classList.remove('image-dragover'));
+wrap.addEventListener('drop',event=>{event.preventDefault();wrap.classList.remove('image-dragover');loadImageFile(event.dataTransfer.files[0]);});
+new ResizeObserver(resize).observe(wrap);
+loadShape(preset('heart'),'爱心');setCount(40);resize();requestAnimationFrame(animate);
+</script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="./" aria-label="傅里叶画室首页"><span class="brandmark">◉</span><strong>傅里叶画室</strong><span class="brand-en">FOURIER STUDIO</span></a><span class="top-note"><i></i> 一条线，无数种可能</span></header>
+<main>
+  <section class="intro"><div><div class="eyebrow">A LITTLE MATH. A LOT OF WONDER.</div><h1>让圆圈，画出你的想象<span>。</span></h1><p>画一个图形，看看旋转的圆如何把它重新描绘。</p></div><div class="intro-symbol" aria-hidden="true">∑<span>圆的相加<br>线的诞生</span></div></section>
+  <div class="studio">
+    <aside class="controls">
+      <section class="control-section"><div class="section-heading"><span class="step">01</span><h2>选择你的线条</h2></div><div class="presets" role="group" aria-label="示例图形"><button data-preset="heart" class="preset active"><span>♡</span>爱心</button><button data-preset="star" class="preset"><span>☆</span>星星</button><button data-preset="butterfly" class="preset"><span>ʚɞ</span>蝴蝶</button><button data-preset="flower" class="preset"><span>❀</span>花朵</button></div><button id="draw" class="draw-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15z"/></svg>自己画一个<span>↗</span></button><button id="import-image" class="draw-button">▧ 导入图片<span>↗</span></button><input id="image-file" type="file" accept="image/png,image/jpeg,image/webp,image/bmp,image/gif,image/svg+xml" hidden><p class="small-note" id="draw-note">也可以直接选一个示例开始探索。</p></section>
+      <section class="control-section"><div class="section-heading"><span class="step">02</span><h2>用多少个圆？</h2></div><div class="count-row editable-count"><label class="count-label" for="count-number">旋转圆数量</label><div><input id="count-number" type="number" min="1" max="511" value="40" aria-label="精确设置圆圈数量"><span>个</span></div></div><input id="count" type="range" min="1" max="511" value="40" aria-label="圆圈数量"><div class="range-labels"><span>1 · 简单</span><span>511 · 精细</span></div><div class="count-presets" role="group" aria-label="常用圆圈数量"><button data-count="5">5</button><button data-count="20">20</button><button data-count="60">60</button><button data-count="120">120</button></div><p class="small-note">点击上面的数字直接输入（1–511），按 Enter 或移开焦点应用。</p></section>
+      <section class="control-section options"><div class="section-heading"><span class="step">03</span><h2>调一调，慢慢看</h2></div><div class="speed-row"><label for="speed">统一速度倍率</label><select id="speed"><option value="0.01">0.01×</option><option value="0.05">0.05×</option><option value="0.1" selected>0.1×</option><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></div><label class="toggle-row" for="circles"><span>显示旋转圆</span><input id="circles" type="checkbox" checked><span class="switch"></span></label><label class="toggle-row" for="reference"><span>显示原图轮廓</span><input id="reference" type="checkbox" checked><span class="switch"></span></label></section>
+      <div class="aside-footer">从一个圆，到一幅画。<span>数学也可以很好玩。</span></div>
+    </aside>
+    <section class="workspace" aria-label="傅里叶绘图工作区">
+      <div class="canvas-toolbar"><div class="live-status"><span class="status-dot"></span><span id="mode-label">正在描绘</span></div><div class="toolbar-right"><span id="shape-name">爱心</span><button id="export" class="icon-button" aria-label="保存画布为图片" title="保存图片"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v4h16v-4"/></svg></button></div></div>
+      <div class="canvas-wrap" id="canvas-wrap"><canvas id="canvas" aria-label="旋转圆叠加绘制图形。点击自己画一个，可用鼠标或手指绘制。"></canvas><div class="canvas-corner">z(t) = z₀ + ∑ rᵢ eⁱ⁽ωᵢᵗ⁺φᵢ⁾</div><div id="draw-hint" class="draw-hint" hidden><span>✎</span><strong>在这里一笔画出你的图形</strong><p>松开后点击「开始转换」 · 首尾会自动连接</p></div><div class="legend"><span><i class="legend-line original"></i>原图</span><span><i class="legend-line result"></i>傅里叶轨迹</span></div><div id="drawing-actions" class="drawing-actions" hidden><button id="redraw">重画</button><button id="convert" class="primary">开始转换 ↗</button><button id="cancel-draw">取消</button></div></div>
+      <div class="playback"><button id="play" class="play-button" aria-label="暂停动画">Ⅱ</button><button id="restart" class="icon-button" aria-label="从头播放" title="从头播放">↺</button><input id="timeline" type="range" min="0" max="1000" value="0" aria-label="描绘进度"><output id="progress">0%</output><span class="cycle-label">一个周期</span></div>
+      <div class="canvas-footer"><span><i></i><strong id="circle-stat">40</strong> 个圆正在协作</span><span id="accuracy">轮廓重建中</span></div>
+    </section>
+  </div>
+  <section class="parameters" aria-label="圆圈参数编辑器">
+    <div class="parameter-heading"><div><div class="eyebrow">CIRCLE PARAMETERS</div><h2>每个圆，都可以自己定义。</h2><p>三组 N × 1 列矩阵，第 i 行对应第 i 个圆，按首尾相接的顺序排列。</p></div><a class="parameter-jump" href="#count-number">数量：<strong id="matrix-count">40</strong> 个 ↗</a></div>
+    <div class="parameter-formula">z(t) = z₀ + ∑ rᵢ · eⁱ⁽ωᵢᵗ⁺φᵢ⁾ <span>t：模拟秒数，0–9 s · z₀ = <b id="center-value"></b></span></div>
+    <div class="matrix-copy-options"><label for="copy-shape">复制格式</label><select id="copy-shape"><option value="vector">行向量 [1, 2, 3]</option><option value="row">行矩阵 [[1, 2, 3]]</option><option value="column">列矩阵 [[1], [2], [3]]</option></select><span>选中几个数字就复制几个；Ctrl + C 或「复制选中」均可。</span></div>
+    <div class="matrix-grid">
+      <div class="matrix-field"><label for="omega-matrix"><strong>Ω · 角速度矩阵</strong><span>rad/s</span></label><p>恒定角速度；正数顺时针，负数逆时针。</p><div class="matrix-brackets"><textarea id="omega-matrix" spellcheck="false" aria-describedby="matrix-help" wrap="off"></textarea></div><div class="matrix-field-actions"><button data-copy-selection="omega-matrix" disabled aria-label="复制选中的角速度">复制选中</button><button data-copy-matrix="omega-matrix" aria-label="复制整组角速度">复制整组</button></div></div>
+      <div class="matrix-field"><label for="phase-matrix"><strong>Φ · 初始角度矩阵</strong><span>rad</span></label><p>相对向右方向；π/2 约为 1.570796。</p><div class="matrix-brackets"><textarea id="phase-matrix" spellcheck="false" aria-describedby="matrix-help" wrap="off"></textarea></div><div class="matrix-field-actions"><button data-copy-selection="phase-matrix" disabled aria-label="复制选中的初始角度">复制选中</button><button data-copy-matrix="phase-matrix" aria-label="复制整组初始角度">复制整组</button></div></div>
+      <div class="matrix-field"><label for="radius-matrix"><strong>R · 半径 / 长度矩阵</strong><span>归一化单位</span></label><p>圆半径也是连杆长度；允许设为 0。</p><div class="matrix-brackets"><textarea id="radius-matrix" spellcheck="false" aria-describedby="matrix-help" wrap="off"></textarea></div><div class="matrix-field-actions"><button data-copy-selection="radius-matrix" disabled aria-label="复制选中的半径">复制选中</button><button data-copy-matrix="radius-matrix" aria-label="复制整组半径">复制整组</button></div></div>
+    </div>
+    <p id="matrix-help" class="matrix-help">点击矩阵框后按 Ctrl + V 粘贴。支持 [1, 2, 3]、[[1, 2, 3]]、[[1], [2], [3]]、[1; 2; 3] 或每行一个数字。三组行数一致时，应用后自动更新圆圈数量。</p>
+    <div id="copy-fallback" hidden><label for="copy-output">复制内容已选中，请按 Ctrl + C</label><textarea id="copy-output" readonly spellcheck="false"></textarea></div>
+    <div class="matrix-actions"><button id="apply-matrices" class="primary">应用矩阵并播放 ↗</button><button id="restore-fourier">恢复原图傅里叶参数</button><button id="example-matrices">试试三圆示例</button><label class="number-label"><input type="checkbox" id="circle-numbers">画布标注序号</label></div>
+    <div class="matrix-status-row"><p id="matrix-status" role="status" aria-live="polite">正在显示原图的傅里叶参数。</p><span id="simulation-time">t = 0.00 s</span></div><p id="matrix-error" role="alert" hidden></p>
+    <div class="copy-all-row"><button id="copy-all-parameters">复制全部三列参数</button><span>生成 [[角速度, 初始角度, 半径], …]，可以直接粘贴到下方整表导入。</span></div>
+    <details id="paste-details"><summary>整表粘贴 · 从 Excel 一次导入三列 <span>↗</span></summary><p class="table-note">按 Ctrl + V 粘贴纯数字表格，不含表头。每行一个圆，三列依次为角速度（rad/s）、初始角度（rad）、半径。支持制表符、逗号或空格分列，换行或分号分行。</p><label class="paste-label" for="table-paste">三列参数表</label><textarea id="table-paste" spellcheck="false" placeholder="0.7&#9;0&#9;0.7&#10;-2.1&#9;1.570796&#9;0.25&#10;3.5&#9;0&#9;0.12"></textarea><div class="matrix-actions"><button id="import-table" class="primary">导入整表并播放 ↗</button><span class="paste-tip">也支持 JSON：[[0.7, 0, 0.7], [-2.1, 1.57, 0.25]]</span></div><p id="paste-error" role="alert" hidden></p></details>
+    <details id="parameter-details"><summary>查看所有圆的参数与实时状态 <span>↗</span></summary><p class="table-note">当前角度按 2π 取模。圆心与端点坐标随旋转更新；y 轴向下。角速度列为基准值；实际播放角速度 = 基准值 × 统一速度倍率。倍率也会同步换算到下方 Desmos 的 c 列表。</p><div class="parameter-table-wrap"><table class="parameter-table"><thead><tr><th>圆</th><th>角速度 ω (rad/s)</th><th>初始角度 φ (rad)</th><th>半径 r</th><th>当前角度 (rad)</th><th>圆心 (x, y)</th><th>端点 (x, y)</th></tr></thead><tbody id="parameter-rows"></tbody></table></div></details>
+  </section>
+  <section class="parameters desmos-export" id="desmos-export" aria-label="适配你的 Desmos 公式">
+    <div class="parameter-heading"><div><div class="eyebrow">DESMOS EXPORT</div><h2>给你的 Desmos 公式用。</h2><p>已适配 x 用 sin、y 用 cos，以及你公式里的 200π/180 系数。直接保留你的绘图公式，分别替换 a、b、c 三组列表。</p></div><span class="desmos-badge">a · b · c</span></div>
+    <div class="desmos-settings"><label for="desmos-domain">1× 时的基础 t 范围</label><select id="desmos-domain"><option value="1">0–1（归一化基准）</option><option value="9">0–9（模拟秒数基准）</option></select><label><input id="desmos-center" type="checkbox">包含中心偏移（加一个速度为 0 的项）</label></div>
+    <div class="uniform-speed-control"><label for="uniform-speed">所有圆的转速等比例缩放</label><div><input id="uniform-speed" type="number" min="0.001" max="4" step="any" value="0.1" aria-describedby="speed-scale-note"><span>×</span></div><span class="uniform-speed-hint">0.1 = 原来的十分之一；可输入 0.05、0.01 等倍率。</span></div>
+    <p id="speed-scale-note" class="matrix-help"></p>
+    <p id="desmos-summary" class="desmos-summary" role="status"></p>
+    <div class="matrix-grid">
+      <div class="desmos-list"><label for="desmos-a">a · 初始角度（已转换）</label><textarea id="desmos-a" readonly spellcheck="false"></textarea><button data-copy-desmos="a">单独复制 a</button></div>
+      <div class="desmos-list"><label for="desmos-b">b · 半径 / 长度</label><textarea id="desmos-b" readonly spellcheck="false"></textarea><button data-copy-desmos="b">单独复制 b</button></div>
+      <div class="desmos-list"><label for="desmos-c">c · 转速（已转换）</label><textarea id="desmos-c" readonly spellcheck="false"></textarea><button data-copy-desmos="c">单独复制 c</button></div>
+    </div>
+    <p class="matrix-help">这些是画布当前已应用参数的转换结果。三组列表保持相同顺序；不要与上方原始 Ω、Φ、R 混用。未包含中心偏移时，仅整体位置有所不同。若还使用这些列表绘制各个圆，相应公式也须使用相同角度约定。</p>
+  </section>
+  <section class="explanation"><div class="explain-index">背后的数学 <span>↘</span></div><p>每个圆以自己的速度旋转。把它们首尾相接，最后一个圆的端点就会画出一条线。<br><span>自定义角速度可能产生不闭合的轨迹；自定义模式会在 9 秒时暂停，可点击从头播放。</span></p><span class="formula" aria-hidden="true">复杂 → 简单 → 可能</span></section>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+<dialog id="image-dialog" aria-labelledby="image-dialog-title">
+  <div class="image-dialog-heading"><div><div class="eyebrow">IMAGE TO FOURIER</div><h2 id="image-dialog-title">把图片变成旋转圆。</h2></div><button id="close-image" aria-label="关闭图片导入">×</button></div>
+  <p class="image-intro">自动提取图片中的单条闭合轮廓。适合浅色背景上的深色图案、图标或剪影；复杂照片可调阈值后选择轮廓。</p>
+  <div class="image-preview-grid"><figure><figcaption>原图</figcaption><canvas id="image-original"></canvas></figure><figure><figcaption>选中的轮廓</figcaption><canvas id="image-outline"></canvas></figure></div>
+  <div class="image-controls"><label for="image-threshold">明暗阈值 <output id="threshold-value">160</output></label><input id="image-threshold" type="range" min="0" max="255" value="160"><button id="auto-threshold">自动阈值</button><label class="image-invert"><input id="image-invert" type="checkbox">浅色图案 / 深色背景</label></div>
+  <label class="image-contour-label" for="image-contour">选择要转换的轮廓</label><select id="image-contour"></select>
+  <p id="image-status" role="status" aria-live="polite"></p><p id="image-error" role="alert" hidden></p>
+  <div class="image-dialog-actions"><button id="cancel-image">取消</button><button id="convert-image" class="primary" disabled>转换为傅里叶圆 ↗</button></div>
+  <p class="image-local-note">图片只在本机浏览器处理。每次转换一条轮廓，不会自动连接不同图案。</p>
+</dialog>
+</body></html>
+
+
+
