@@ -4,12 +4,13 @@ import {autoImageThreshold,imageContours} from './contours.js';
 const $ = id => document.getElementById(id);
 const canvas = $('canvas'), ctx = canvas.getContext('2d'), wrap = $('canvas-wrap');
 let width=0,height=0,scale=1,dpr=1,source=[],data,curve=[],count=40,time=0,playing=!matchMedia('(prefers-reduced-motion: reduce)').matches,speed=.1,last=0;
-let drawMode=false,stroke=[],pointer=null,wasPlaying=false,currentName='爱心',toastTimer;
+let drawMode=false,stroke=[],pointer=null,wasPlaying=false,currentName='爱心',toastTimer,polygonSides=6;
 let fourierData,customMode=false,viewExtent=1,curveSteps=1024,tableCells=[],lastTableTime=-Infinity;
 const names={heart:'爱心',star:'星星',butterfly:'蝴蝶',flower:'花朵'};
 
 function preset(name) {
   const pts=[];
+  if(name==='polygon')return Array.from({length:polygonSides},(_,i)=>{const a=i*TAU/polygonSides-Math.PI/2;return {x:Math.cos(a),y:Math.sin(a)};});
   if(name==='star') {
     for(let i=0;i<10;i++){const a=i*TAU/10-Math.PI/2,r=i%2?.44:1;pts.push({x:r*Math.cos(a),y:r*Math.sin(a)});}
   } else {
@@ -27,6 +28,18 @@ function loadShape(points,name) {
   source=resampleClosed(normalize(points));data=transform(source);fourierData=data;customMode=false;currentName=name;
   $('shape-name').textContent=name;
   rebuild();
+}
+
+function setActivePreset(name){
+  document.querySelectorAll('[data-preset]').forEach(button=>{const active=button.dataset.preset===name;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
+  document.querySelectorAll('[data-sides]').forEach(button=>{const active=name==='polygon'&&Number(button.dataset.sides)===polygonSides;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
+}
+function selectPreset(name){
+  if(drawMode)leaveDraw(false);
+  loadShape(preset(name),name==='polygon'?`正${polygonSides}边形`:names[name]);playing=true;setActivePreset(name);sync();
+}
+function setPolygonSides(value){
+  polygonSides=Math.max(3,Math.min(256,Math.round(Number(value)||6)));$('polygon-sides').value=polygonSides;selectPreset('polygon');
 }
 
 function rebuild() {
@@ -148,9 +161,12 @@ $('redraw').onclick=()=>{stroke=[];$('draw-hint').hidden=false;$('convert').disa
 $('cancel-draw').onclick=()=>leaveDraw();
 $('convert').onclick=()=>{
   if(stroke.length<4){toast('请先画出一条完整的线。');return;}
-  try{const points=[...stroke];loadShape(points,'我的手绘');leaveDraw(true);document.querySelectorAll('[data-preset]').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false');});toast('转换完成，试着改变圆圈数量。');}catch(error){toast(error.message);}
+  try{const points=[...stroke];loadShape(points,'我的手绘');leaveDraw(true);setActivePreset(null);toast('转换完成，试着改变圆圈数量。');}catch(error){toast(error.message);}
 };
-document.querySelectorAll('[data-preset]').forEach(button=>{button.setAttribute('aria-pressed',String(button.classList.contains('active')));button.onclick=()=>{if(drawMode)leaveDraw(false);loadShape(preset(button.dataset.preset),names[button.dataset.preset]);playing=true;document.querySelectorAll('[data-preset]').forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button));});sync();};});
+document.querySelectorAll('[data-preset]').forEach(button=>{button.setAttribute('aria-pressed',String(button.classList.contains('active')));button.onclick=()=>selectPreset(button.dataset.preset);});
+$('polygon-sides').onchange=event=>setPolygonSides(event.target.value);
+$('polygon-sides').onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();setPolygonSides(event.target.value);event.target.blur();}};
+document.querySelectorAll('[data-sides]').forEach(button=>{button.setAttribute('aria-label',`正${button.dataset.sides}边形`);button.onclick=()=>setPolygonSides(button.dataset.sides);});
 document.querySelectorAll('[data-count]').forEach(b=>b.onclick=()=>setCount(b.dataset.count));
 $('count').oninput=event=>setCount(event.target.value);
 $('count-number').onchange=event=>setCount(event.target.value);
@@ -231,7 +247,7 @@ function applyMatrices(){
     const terms=termsFromVectors(...vectors);
     data={center:{...fourierData.center},terms};customMode=true;
     $('shape-name').textContent=`自定义 · ${currentName}`;
-    document.querySelectorAll('[data-preset]').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false');});
+    setActivePreset(null);
     playing=true;setCount(terms.length);toast(`已应用 ${terms.length} 个圆的参数。`);
   }catch(error){$('matrix-error').textContent=error.message;$('matrix-error').hidden=false;}
 }
@@ -368,7 +384,7 @@ $('convert-image').onclick=()=>{
   const contour=imagePaths[Number($('image-contour').value)];if(!contour)return;
   try{
     loadShape(contour.points,`图片 · ${imageName}`);imageCommitted=true;$('image-dialog').close();
-    document.querySelectorAll('[data-preset]').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false');});
+    setActivePreset(null);
     toast('图片轮廓已转换，可以调节圆数或复制 Desmos 参数。');
   }catch(error){$('image-error').textContent=error.message;$('image-error').hidden=false;}
 };

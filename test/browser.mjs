@@ -9,7 +9,7 @@ const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chr
 try {
   const page=await browser.newPage({viewport:{width:1365,height:1000},deviceScaleFactor:1});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(pathToFileURL(path.resolve('傅里叶画室.html')).href,{waitUntil:'load'});
+  await page.goto(process.env.FOURIER_TEST_URL||pathToFileURL(path.resolve('傅里叶画室.html')).href,{waitUntil:'load'});
   await page.getByRole('button',{name:'暂停动画',exact:true}).click();
   await page.locator('#timeline').fill('750');
   await mkdir('qa',{recursive:true});
@@ -177,6 +177,23 @@ try {
   await page.locator('#image-file').setInputFiles(imageFile);await page.locator('#image-dialog').waitFor({state:'visible'});
   assert.equal(await page.locator('#image-dialog').evaluate(el=>el.scrollWidth>el.clientWidth),false);
   await page.screenshot({path:'qa/image-import-mobile.png'});await page.locator('#close-image').click();
+  await page.locator('[data-preset="polygon"]').click();
+  assert.equal(await page.locator('#shape-name').textContent(),'正6边形');
+  await page.locator('#polygon-sides').fill('7');await page.locator('#polygon-sides').press('Enter');
+  assert.equal(await page.locator('#shape-name').textContent(),'正7边形');
+  assert.match(await page.locator('#desmos-summary').textContent(),/正7边形/);
+  await page.locator('[data-sides="3"]').click();assert.equal(await page.locator('#shape-name').textContent(),'正3边形');
+  assert.equal(await page.locator('[data-preset="polygon"]').getAttribute('aria-pressed'),'true');
+  assert.equal(await page.locator('[data-sides="3"]').getAttribute('aria-pressed'),'true');
+  await page.locator('#polygon-sides').fill('2');await page.locator('#polygon-sides').press('Enter');assert.equal(await page.locator('#polygon-sides').inputValue(),'3');
+  await page.locator('#polygon-sides').fill('999');await page.locator('#polygon-sides').press('Enter');assert.equal(await page.locator('#polygon-sides').inputValue(),'256');
+  await page.locator('[data-sides="6"]').click();
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  await page.setViewportSize({width:1365,height:1000});
+  await page.getByRole('button',{name:'暂停动画',exact:true}).click();await page.locator('#timeline').fill('1000');
+  await page.locator('.studio').screenshot({path:'qa/polygon.png'});
+  await page.getByRole('button',{name:'爱心',exact:false}).click();
+  assert.equal(await page.locator('[data-sides="6"]').getAttribute('aria-pressed'),'false');
   assert.deepEqual(errors,[]);
   console.log('PASS: original drawing controls, manual count, vector edit, Excel table paste, invalid input, live parameter table, custom resize, restore, circle labels, PNG export, mobile layout; no browser errors.');
 }finally{await browser.close();}
